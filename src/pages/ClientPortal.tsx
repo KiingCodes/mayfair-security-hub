@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
 import logo from "@/assets/logo.png";
+import bgServices from "@/assets/bg-services.jpg";
 import ClientDashboard from "@/components/portal/ClientDashboard";
 import NotificationBell from "@/components/portal/NotificationBell";
 
