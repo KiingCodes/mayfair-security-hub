@@ -14,6 +14,7 @@ const navLinks = [
   { name: "Live Tracking", path: "/tracking" },
   { name: "Careers", path: "/careers" },
   { name: "Contact", path: "/contact" },
+  { name: "Help Desk", path: "/help-desk" },
 ];
 
 const Header = () => {
