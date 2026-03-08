@@ -81,8 +81,6 @@ const AdminFiles = () => {
 
   useEffect(() => { fetchFiles(); }, [selectedClient]);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
   const uploadFile = async (file: File) => {
     if (!user || !selectedClient || selectedClient === "all") {
       if (!selectedClient || selectedClient === "all") toast({ title: "Select a client first", variant: "destructive" });
