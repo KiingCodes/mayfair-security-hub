@@ -65,6 +65,7 @@ const Header = () => {
                 Client Portal
               </Button>
             </Link>
+            <ThemeToggle />
             <a href="#">
               <Button className="btn-emergency">
                 <Phone className="w-4 h-4 mr-2" />
