@@ -70,6 +70,10 @@ const AdminDashboard = () => {
 
   // Staff state
   const [staffProfiles, setStaffProfiles] = useState<any[]>([]);
+  const [inviteDialog, setInviteDialog] = useState(false);
+  const [inviteForm, setInviteForm] = useState({ email: "", full_name: "", position: "guard" });
+  const [inviteResult, setInviteResult] = useState<{ email: string; temp_password: string } | null>(null);
+  const [inviting, setInviting] = useState(false);
   
   // Client state
   const [clients, setClients] = useState<any[]>([]);
@@ -243,6 +247,28 @@ const AdminDashboard = () => {
       toast({ title: "Deleted", description: "Staff profile removed." });
       fetchAll();
     }
+  };
+  const handleInviteStaff = async () => {
+    if (!inviteForm.email || !inviteForm.full_name) return;
+    setInviting(true);
+    setInviteResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("invite-staff", {
+        body: {
+          email: inviteForm.email,
+          full_name: inviteForm.full_name,
+          position: inviteForm.position,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setInviteResult({ email: data.email, temp_password: data.temp_password });
+      toast({ title: "Staff Invited!", description: `Account created for ${inviteForm.full_name}.` });
+      fetchAll();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    }
+    setInviting(false);
   };
 
   const updateIncidentStatus = async (id: string, status: string) => {
@@ -604,6 +630,9 @@ const AdminDashboard = () => {
               </h2>
               <div className="flex flex-wrap items-center gap-2">
                 <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button size="sm" onClick={() => { setInviteDialog(true); setInviteResult(null); setInviteForm({ email: "", full_name: "", position: "guard" }); }} className="bg-primary hover:bg-primary/90 shadow-md">
+                  <Plus className="w-4 h-4 mr-2" /> Invite Staff
+                </Button>
                 <Button variant="outline" size="sm" onClick={() => exportToCsv("staff", filteredStaff, ["full_name", "position", "psira_number", "phone", "email", "status", "created_at"])} disabled={filteredStaff.length === 0}>
                   <Download className="w-4 h-4 mr-2" /> Export CSV
                 </Button>
@@ -878,6 +907,80 @@ const AdminDashboard = () => {
               {uploading ? "Uploading..." : editingGallery ? "Update" : "Add"}
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite Staff Dialog */}
+      <Dialog open={inviteDialog} onOpenChange={setInviteDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Invite Staff Member</DialogTitle>
+          </DialogHeader>
+          {inviteResult ? (
+            <div className="space-y-4">
+              <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+                <p className="font-semibold text-sm mb-3">Account created! Share these credentials:</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between bg-background rounded-lg p-2.5">
+                    <span className="text-muted-foreground">Email:</span>
+                    <span className="font-mono font-semibold">{inviteResult.email}</span>
+                  </div>
+                  <div className="flex justify-between bg-background rounded-lg p-2.5">
+                    <span className="text-muted-foreground">Temp Password:</span>
+                    <span className="font-mono font-semibold">{inviteResult.temp_password}</span>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  Staff should change their password after first login via Settings.
+                </p>
+              </div>
+              <Button className="w-full" onClick={() => { setInviteDialog(false); setInviteResult(null); }}>
+                Done
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <Label>Full Name *</Label>
+                <Input
+                  value={inviteForm.full_name}
+                  onChange={(e) => setInviteForm({ ...inviteForm, full_name: e.target.value })}
+                  placeholder="e.g. John Doe"
+                />
+              </div>
+              <div>
+                <Label>Email Address *</Label>
+                <Input
+                  type="email"
+                  value={inviteForm.email}
+                  onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
+                  placeholder="staff@example.com"
+                />
+              </div>
+              <div>
+                <Label>Position</Label>
+                <Select value={inviteForm.position} onValueChange={(v) => setInviteForm({ ...inviteForm, position: v })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="guard">Guard</SelectItem>
+                    <SelectItem value="supervisor">Supervisor</SelectItem>
+                    <SelectItem value="control_room">Control Room</SelectItem>
+                    <SelectItem value="patrol">Patrol Officer</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                onClick={handleInviteStaff}
+                className="w-full bg-primary hover:bg-primary/90 shadow-md"
+                disabled={inviting || !inviteForm.email || !inviteForm.full_name}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {inviting ? "Creating Account..." : "Create Staff Account"}
+              </Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </Layout>
