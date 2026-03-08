@@ -203,6 +203,21 @@ const AdminDashboard = () => {
     }
   };
 
+  const updateAlertStatus = async (id: string, status: string, notes?: string) => {
+    const updateData: any = { status };
+    if (status === "resolved") updateData.resolved_at = new Date().toISOString();
+    if (notes) updateData.admin_notes = notes;
+    const { error } = await supabase.from("emergency_alerts").update(updateData).eq("id", id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Updated", description: `Alert marked as ${status}.` });
+      setRespondingId(null);
+      setAdminNotes("");
+      fetchAll();
+    }
+  };
+
   return (
     <Layout>
       {/* Header */}
