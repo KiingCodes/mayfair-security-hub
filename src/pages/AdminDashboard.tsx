@@ -21,6 +21,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import DateRangeFilter from "@/components/admin/DateRangeFilter";
 import AdminFiles from "@/components/admin/AdminFiles";
+import AdminInvoices from "@/components/admin/AdminInvoices";
+import AdminContracts from "@/components/admin/AdminContracts";
+import AdminGuardRequests from "@/components/admin/AdminGuardRequests";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
