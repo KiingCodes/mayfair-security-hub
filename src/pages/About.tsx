@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import logo from "@/assets/logo.png";
+import bgAbout from "@/assets/bg-about.jpg";
 
 const values = [
   { icon: Shield, title: "Integrity", description: "We uphold the highest ethical standards in all our operations." },
