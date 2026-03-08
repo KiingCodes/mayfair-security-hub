@@ -70,6 +70,10 @@ const AdminDashboard = () => {
 
   // Staff state
   const [staffProfiles, setStaffProfiles] = useState<any[]>([]);
+  const [inviteDialog, setInviteDialog] = useState(false);
+  const [inviteForm, setInviteForm] = useState({ email: "", full_name: "", position: "guard" });
+  const [inviteResult, setInviteResult] = useState<{ email: string; temp_password: string } | null>(null);
+  const [inviting, setInviting] = useState(false);
   
   // Client state
   const [clients, setClients] = useState<any[]>([]);
