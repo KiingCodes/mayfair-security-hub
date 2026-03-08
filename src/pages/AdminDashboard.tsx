@@ -1010,6 +1010,48 @@ const AdminDashboard = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={resetDialog} onOpenChange={setResetDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Reset Staff Password</DialogTitle>
+          </DialogHeader>
+          {resetResult ? (
+            <div className="space-y-4">
+              <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+                <p className="font-semibold text-sm mb-3">New password generated for {resetTarget?.full_name}:</p>
+                <div className="bg-background rounded-lg p-2.5 flex justify-between text-sm">
+                  <span className="text-muted-foreground">New Password:</span>
+                  <span className="font-mono font-semibold">{resetResult}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  Share this with the staff member. They should change it after logging in.
+                </p>
+              </div>
+              <Button className="w-full" onClick={() => { setResetDialog(false); setResetResult(null); }}>
+                Done
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                This will generate a new temporary password for <strong>{resetTarget?.full_name}</strong> ({resetTarget?.email || "no email"}).
+                Their current password will stop working immediately.
+              </p>
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1" onClick={() => setResetDialog(false)}>
+                  Cancel
+                </Button>
+                <Button className="flex-1 bg-primary hover:bg-primary/90" onClick={handleResetPassword} disabled={resetting}>
+                  <KeyRound className="w-4 h-4 mr-2" />
+                  {resetting ? "Resetting..." : "Reset Password"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
