@@ -283,6 +283,29 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
         : '<p style="color:#334155;font-size:14px;line-height:1.6">If you have questions about this decision, please contact our support team.</p>'}
     `),
   }),
+
+  // 12. Support ticket reply notification
+  ticket_reply: (data) => ({
+    subject: `💬 New Reply on Ticket: ${data.subject}`,
+    html: emailWrapper("New Support Reply 💬", `
+      <p style="color:#334155;font-size:15px;line-height:1.6">You have a new reply on your support ticket:</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Ticket</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:700">${data.subject}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Status</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.status || "In Progress"}</td></tr>
+      </table>
+      <div style="background:#f0f9ff;border-left:4px solid #3b82f6;padding:16px;border-radius:0 8px 8px 0;margin:16px 0">
+        <p style="margin:0;font-size:14px;color:#1e40af;font-weight:600">Message from Support Team:</p>
+        <p style="margin:8px 0 0;font-size:14px;color:#334155;line-height:1.6">${data.message}</p>
+      </div>
+      <div style="text-align:center;margin:24px 0">
+        <a href="${data.helpdesk_url || '#'}" style="background:#2d5016;color:#ffffff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">
+          View Ticket & Reply →
+        </a>
+      </div>
+    `),
+  }),
 };
 
 Deno.serve(async (req) => {
