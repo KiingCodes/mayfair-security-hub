@@ -4,12 +4,6 @@ import { Camera, X } from "lucide-react";
 import Layout from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
 
-import guardsOnDutyFallback from "@/assets/gallery/guards-on-duty.jpg";
-import patrolVehiclesFallback from "@/assets/gallery/patrol-vehicles.jpg";
-import trainingFallback from "@/assets/gallery/training.jpg";
-import cctvAlarmsFallback from "@/assets/gallery/cctv-alarms.jpg";
-import electricFencingFallback from "@/assets/gallery/electric-fencing.jpg";
-
 const categories = [
   { id: "all", label: "All" },
   { id: "guards", label: "Guards on Duty" },
@@ -19,13 +13,6 @@ const categories = [
   { id: "fencing", label: "Electric Fencing" },
 ];
 
-const fallbackItems = [
-  { id: "f1", image_url: guardsOnDutyFallback, category: "guards", title: "Guard on Night Duty", description: "Our officers maintain vigilance around the clock" },
-  { id: "f2", image_url: patrolVehiclesFallback, category: "vehicles", title: "Patrol Vehicle", description: "Fully equipped patrol units for mobile security" },
-  { id: "f3", image_url: trainingFallback, category: "training", title: "Self-Defence Training", description: "Rigorous hands-on combat training for all officers" },
-  { id: "f4", image_url: cctvAlarmsFallback, category: "cctv", title: "CCTV & Alarm Installation", description: "Professional surveillance and alarm systems" },
-  { id: "f5", image_url: electricFencingFallback, category: "fencing", title: "Electric Fencing", description: "High-voltage perimeter protection installations" },
-];
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -36,11 +23,7 @@ const Gallery = () => {
   useEffect(() => {
     const fetchGallery = async () => {
       const { data } = await supabase.from("gallery_items").select("*").order("sort_order");
-      if (data && data.length > 0) {
-        setGalleryItems(data);
-      } else {
-        setGalleryItems(fallbackItems);
-      }
+      setGalleryItems(data || []);
       setLoading(false);
     };
     fetchGallery();
@@ -94,6 +77,11 @@ const Gallery = () => {
 
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">Loading gallery...</div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-16">
+              <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
+              <p className="text-muted-foreground">No gallery images yet. Check back soon!</p>
+            </div>
           ) : (
             <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <AnimatePresence mode="popLayout">
