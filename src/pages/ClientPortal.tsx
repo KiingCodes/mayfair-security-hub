@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Shield, Lock, Eye, FileText, Users, Download,
-  ChevronRight, LogOut
+  ChevronRight, LogOut, LayoutDashboard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useRole } from "@/hooks/useRole";
 import logo from "@/assets/logo.png";
 import ClientDashboard from "@/components/portal/ClientDashboard";
 
