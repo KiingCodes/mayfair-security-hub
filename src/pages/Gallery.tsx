@@ -4,12 +4,6 @@ import { Camera, X } from "lucide-react";
 import Layout from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
 
-import guardsOnDutyFallback from "@/assets/gallery/guards-on-duty.jpg";
-import patrolVehiclesFallback from "@/assets/gallery/patrol-vehicles.jpg";
-import trainingFallback from "@/assets/gallery/training.jpg";
-import cctvAlarmsFallback from "@/assets/gallery/cctv-alarms.jpg";
-import electricFencingFallback from "@/assets/gallery/electric-fencing.jpg";
-
 const categories = [
   { id: "all", label: "All" },
   { id: "guards", label: "Guards on Duty" },
