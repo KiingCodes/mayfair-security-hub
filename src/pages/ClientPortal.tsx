@@ -78,19 +78,26 @@ const ClientPortal = () => {
           </div>
         </section>
         {isAdmin && (
-          <section className="container mx-auto px-4 -mt-4 mb-4">
+          <section className="container mx-auto px-4 -mt-4 mb-6">
             <Link to="/admin">
               <motion.div
-                className="flex items-center gap-4 bg-destructive/10 border border-destructive/30 rounded-xl p-4 hover:bg-destructive/20 transition-colors cursor-pointer"
+                className="relative overflow-hidden rounded-2xl p-6 bg-gradient-to-r from-primary via-primary/90 to-accent shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] cursor-pointer group"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <LayoutDashboard className="w-8 h-8 text-destructive" />
-                <div className="flex-1">
-                  <h3 className="font-heading font-bold text-destructive">Admin Dashboard</h3>
-                  <p className="text-sm text-muted-foreground">Manage clients, staff, gallery & more</p>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,hsl(var(--accent)/0.3),transparent_60%)]" />
+                <div className="relative flex items-center gap-5">
+                  <div className="w-14 h-14 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center border border-primary-foreground/10">
+                    <LayoutDashboard className="w-7 h-7 text-primary-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-heading font-black text-lg text-primary-foreground tracking-tight">Admin Dashboard</h3>
+                    <p className="text-sm text-primary-foreground/80">Manage clients, staff, gallery & system settings</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-primary-foreground/15 flex items-center justify-center group-hover:bg-primary-foreground/25 transition-colors">
+                    <ChevronRight className="w-5 h-5 text-primary-foreground group-hover:translate-x-0.5 transition-transform" />
+                  </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-destructive" />
               </motion.div>
             </Link>
           </section>
