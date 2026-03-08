@@ -532,7 +532,7 @@ const AdminDashboard = () => {
                   )}
                 </motion.div>
               ))}
-              {alerts.length === 0 && (
+              {filteredAlerts.length === 0 && (
                 <div className="text-center py-16 text-muted-foreground">
                   <div className="w-16 h-16 rounded-full bg-secondary mx-auto mb-4 flex items-center justify-center">
                     <ShieldAlert className="w-8 h-8 opacity-50" />
