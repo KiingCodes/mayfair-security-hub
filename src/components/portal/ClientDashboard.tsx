@@ -148,6 +148,11 @@ const ClientDashboard = () => {
           <StatCard icon={FileText} label="Patrol Reports" value={reports.length} />
         </div>
 
+        {/* Shared Files */}
+        <div className="mb-8">
+          <ClientFiles />
+        </div>
+
         {/* Actions */}
         <div className="flex flex-wrap gap-3 mb-8">
           <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => setCancelDialog(true)}>
