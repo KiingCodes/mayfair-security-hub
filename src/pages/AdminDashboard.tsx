@@ -661,9 +661,14 @@ const AdminDashboard = () => {
 
           {/* Incidents */}
           <TabsContent value="incidents">
-            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-accent" /> Incident Reports
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-heading font-bold flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-accent" /> Incident Reports
+              </h2>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv("incidents", incidents, ["incident_type", "location", "severity", "reporter_name", "status", "description", "created_at"])} disabled={incidents.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Export CSV
+              </Button>
+            </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
