@@ -810,7 +810,7 @@ const AdminDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {cancellations.length === 0 && (
+                  {filteredCancellations.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
                         <XCircle className="w-10 h-10 mx-auto mb-2 opacity-30" />
