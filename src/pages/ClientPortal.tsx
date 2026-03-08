@@ -73,11 +73,14 @@ const ClientPortal = () => {
               <Shield className="w-8 h-8 text-white" />
               <h1 className="text-2xl font-heading font-bold text-white">Client Dashboard</h1>
             </div>
-            <Link to="/settings">
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-foreground">
-                <Settings className="mr-2 w-4 h-4" /> Settings
-              </Button>
-            </Link>
+            <div className="flex items-center gap-3">
+              <NotificationBell />
+              <Link to="/settings">
+                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                  <Settings className="mr-2 w-4 h-4" /> Settings
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
         {isAdmin && (
