@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <div>
-            <img src={logo} alt="Mayfair Security Services" className="h-24 w-auto mb-6 brightness-0 invert" />
+            <h3 className="font-heading text-xl font-bold mb-2">Mayfair Security Services</h3>
             <p className="text-white/70 mb-6">
               Think Ahead, Protect Smarter. Your trusted partner in comprehensive security solutions.
             </p>
