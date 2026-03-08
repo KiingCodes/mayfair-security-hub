@@ -117,7 +117,11 @@ const ClientPortal = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 gradient-hero relative">
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bgServices} alt="" className="w-full h-full object-cover" loading="eager" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--charcoal))/0.9] via-[hsl(var(--green-dark))/0.85] to-[hsl(var(--charcoal))/0.9]" />
+        </div>
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             className="text-center max-w-3xl mx-auto"
