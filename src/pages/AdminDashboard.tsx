@@ -26,6 +26,7 @@ import AdminContracts from "@/components/admin/AdminContracts";
 import AdminGuardRequests from "@/components/admin/AdminGuardRequests";
 import AdminHelpDesk from "@/components/admin/AdminHelpDesk";
 import AdminJobListings from "@/components/admin/AdminJobListings";
+import AdminJobApplications from "@/components/admin/AdminJobApplications";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
@@ -135,7 +136,7 @@ const AdminDashboard = () => {
   const filteredAlerts = useMemo(() => filterByDate(alerts), [alerts, dateFrom, dateTo]);
 
   // Stats
-  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0, alerts: 0 });
+  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0, alerts: 0, applications: 0 });
 
   useEffect(() => {
     fetchAll();
@@ -176,6 +177,7 @@ const AdminDashboard = () => {
       incidents: incidentsRes.data?.filter(i => i.status === "open").length || 0,
       cancellations: cancelRes.data?.filter(c => c.status === "pending").length || 0,
       alerts: alertsRes.data?.filter(a => a.status === "active").length || 0,
+      applications: 0,
     });
   };
 
@@ -386,7 +388,7 @@ const AdminDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="bg-card border rounded-2xl p-1.5 mb-8 shadow-sm">
-            <TabsList className="grid w-full grid-cols-4 md:grid-cols-13 gap-1 bg-transparent h-auto">
+            <TabsList className="grid w-full grid-cols-4 md:grid-cols-7 lg:grid-cols-14 gap-1 bg-transparent h-auto">
               {[
                 { value: "overview", label: "Overview", icon: LayoutDashboard },
                 { value: "alerts", label: "Alerts", icon: ShieldAlert, badge: stats.alerts },
@@ -401,6 +403,7 @@ const AdminDashboard = () => {
                 { value: "guard-requests", label: "Guards", icon: Users },
                 { value: "helpdesk", label: "Help Desk", icon: Bell },
                 { value: "jobs", label: "Jobs", icon: Briefcase },
+                { value: "applications", label: "Applicants", icon: FileText, badge: stats.applications },
               ].map((tab) => (
                 <TabsTrigger
                   key={tab.value}
@@ -927,6 +930,11 @@ const AdminDashboard = () => {
           {/* Job Listings */}
           <TabsContent value="jobs">
             <AdminJobListings />
+          </TabsContent>
+
+          {/* Job Applications */}
+          <TabsContent value="applications">
+            <AdminJobApplications onPendingCount={(count) => setStats(prev => ({ ...prev, applications: count }))} />
           </TabsContent>
         </Tabs>
       </div>
