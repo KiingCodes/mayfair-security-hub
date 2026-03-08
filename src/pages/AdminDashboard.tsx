@@ -401,11 +401,14 @@ const AdminDashboard = () => {
           <TabsContent value="alerts">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
-                <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
+              <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground ml-2 bg-muted px-2.5 py-1 rounded-full">
                   <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Real-time
                 </span>
               </h2>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv("alerts", alerts, ["alert_type", "severity", "status", "location", "description", "admin_notes", "created_at", "resolved_at"])} disabled={alerts.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Export CSV
+              </Button>
             </div>
 
             {alerts.filter(a => a.status === "active").length > 0 && (
