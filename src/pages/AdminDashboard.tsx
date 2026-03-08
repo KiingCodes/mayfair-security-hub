@@ -271,7 +271,7 @@ const AdminDashboard = () => {
     setInviting(false);
   };
 
-
+  const updateIncidentStatus = async (id: string, status: string) => {
     const { error } = await supabase.from("incidents").update({ status }).eq("id", id);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
