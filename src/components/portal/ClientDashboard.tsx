@@ -7,6 +7,8 @@ import {
   FileText, Eye, AlertTriangle, Clock, MapPin, Shield,
   XCircle, Trash2, Send
 } from "lucide-react";
+import PanicButton from "./PanicButton";
+import AlertHistory from "./AlertHistory";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
