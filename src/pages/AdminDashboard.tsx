@@ -21,6 +21,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import DateRangeFilter from "@/components/admin/DateRangeFilter";
 import AdminFiles from "@/components/admin/AdminFiles";
+import AdminInvoices from "@/components/admin/AdminInvoices";
+import AdminContracts from "@/components/admin/AdminContracts";
+import AdminGuardRequests from "@/components/admin/AdminGuardRequests";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
@@ -381,7 +384,7 @@ const AdminDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="bg-card border rounded-2xl p-1.5 mb-8 shadow-sm">
-            <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 gap-1 bg-transparent h-auto">
+            <TabsList className="grid w-full grid-cols-4 md:grid-cols-11 gap-1 bg-transparent h-auto">
               {[
                 { value: "overview", label: "Overview", icon: LayoutDashboard },
                 { value: "alerts", label: "Alerts", icon: ShieldAlert, badge: stats.alerts },
@@ -391,6 +394,9 @@ const AdminDashboard = () => {
                 { value: "files", label: "Files", icon: FileText },
                 { value: "incidents", label: "Incidents", icon: AlertTriangle, badge: stats.incidents },
                 { value: "cancellations", label: "Cancels", icon: XCircle, badge: stats.cancellations },
+                { value: "invoices", label: "Invoices", icon: FileText },
+                { value: "contracts", label: "Contracts", icon: Download },
+                { value: "guard-requests", label: "Guards", icon: Users },
               ].map((tab) => (
                 <TabsTrigger
                   key={tab.value}
@@ -892,6 +898,21 @@ const AdminDashboard = () => {
                 </TableBody>
               </Table>
             </div>
+          </TabsContent>
+
+          {/* Invoices */}
+          <TabsContent value="invoices">
+            <AdminInvoices clients={clients} />
+          </TabsContent>
+
+          {/* Contracts */}
+          <TabsContent value="contracts">
+            <AdminContracts clients={clients} />
+          </TabsContent>
+
+          {/* Guard Requests */}
+          <TabsContent value="guard-requests">
+            <AdminGuardRequests clients={clients} />
           </TabsContent>
         </Tabs>
       </div>
