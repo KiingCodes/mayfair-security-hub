@@ -25,6 +25,7 @@ const portalFeatures = [
 const ClientPortal = () => {
   const { toast } = useToast();
   const { user, loading, signIn, signUp, signOut } = useAuth();
+  const { isAdmin } = useRole();
   const [isLogin, setIsLogin] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
