@@ -259,6 +259,7 @@ const AdminDashboard = () => {
           <TabsContent value="overview">
             <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
               {[
+                { label: "Active Alerts", value: stats.alerts, icon: ShieldAlert, color: "text-destructive" },
                 { label: "Gallery Items", value: stats.gallery, icon: Image, color: "text-primary" },
                 { label: "Staff Members", value: stats.staff, icon: UserCheck, color: "text-primary" },
                 { label: "Clients", value: stats.clients, icon: Users, color: "text-primary" },
