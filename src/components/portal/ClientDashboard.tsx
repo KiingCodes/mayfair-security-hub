@@ -152,9 +152,6 @@ const ClientDashboard = () => {
           <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => setCancelDialog(true)}>
             <XCircle className="w-4 h-4 mr-2" /> Request Contract Cancellation
           </Button>
-          <Button variant="destructive" onClick={() => setDeleteDialog(true)}>
-            <Trash2 className="w-4 h-4 mr-2" /> Delete My Profile
-          </Button>
         </div>
 
         {/* Cancellation Requests */}

@@ -72,9 +72,11 @@ const ClientPortal = () => {
               <Shield className="w-8 h-8 text-white" />
               <h1 className="text-2xl font-heading font-bold text-white">Client Dashboard</h1>
             </div>
-            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-foreground" onClick={signOut}>
-              <LogOut className="mr-2 w-4 h-4" /> Sign Out
-            </Button>
+            <Link to="/settings">
+              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-foreground">
+                <Settings className="mr-2 w-4 h-4" /> Settings
+              </Button>
+            </Link>
           </div>
         </section>
         {isAdmin && (
