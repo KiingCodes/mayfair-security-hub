@@ -8,6 +8,9 @@ import {
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import logo from "@/assets/logo.png";
+import bgHero from "@/assets/bg-hero.jpg";
+import bgTracking from "@/assets/bg-tracking.jpg";
+import bgCta from "@/assets/bg-cta.jpg";
 
 const services = [
   { icon: Shield, title: "Armed Guards", description: "Highly trained armed security personnel for maximum protection" },
