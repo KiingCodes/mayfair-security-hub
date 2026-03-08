@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import PanicButton from "./PanicButton";
 import AlertHistory from "./AlertHistory";
+import ClientFiles from "./ClientFiles";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -145,6 +146,11 @@ const ClientDashboard = () => {
           <StatCard icon={Clock} label="Check-ins Today" value={checkins.length} />
           <StatCard icon={AlertTriangle} label="Open Incidents" value={incidents.filter(i => i.status === "open").length} color="text-accent" />
           <StatCard icon={FileText} label="Patrol Reports" value={reports.length} />
+        </div>
+
+        {/* Shared Files */}
+        <div className="mb-8">
+          <ClientFiles />
         </div>
 
         {/* Actions */}

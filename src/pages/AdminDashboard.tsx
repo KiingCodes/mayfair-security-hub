@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import DateRangeFilter from "@/components/admin/DateRangeFilter";
+import AdminFiles from "@/components/admin/AdminFiles";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
@@ -380,13 +381,14 @@ const AdminDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="bg-card border rounded-2xl p-1.5 mb-8 shadow-sm">
-            <TabsList className="grid w-full grid-cols-3 md:grid-cols-7 gap-1 bg-transparent h-auto">
+            <TabsList className="grid w-full grid-cols-4 md:grid-cols-8 gap-1 bg-transparent h-auto">
               {[
                 { value: "overview", label: "Overview", icon: LayoutDashboard },
                 { value: "alerts", label: "Alerts", icon: ShieldAlert, badge: stats.alerts },
                 { value: "gallery", label: "Gallery", icon: Image },
                 { value: "staff", label: "Staff", icon: UserCheck },
                 { value: "clients", label: "Clients", icon: Users },
+                { value: "files", label: "Files", icon: FileText },
                 { value: "incidents", label: "Incidents", icon: AlertTriangle, badge: stats.incidents },
                 { value: "cancellations", label: "Cancels", icon: XCircle, badge: stats.cancellations },
               ].map((tab) => (
@@ -822,6 +824,14 @@ const AdminDashboard = () => {
                 </TableBody>
               </Table>
             </div>
+          </TabsContent>
+
+          {/* Files */}
+          <TabsContent value="files">
+            <h2 className="text-xl font-heading font-bold flex items-center gap-2 mb-6">
+              <FileText className="w-6 h-6 text-primary" /> File Sharing
+            </h2>
+            <AdminFiles />
           </TabsContent>
 
           {/* Cancellations */}
