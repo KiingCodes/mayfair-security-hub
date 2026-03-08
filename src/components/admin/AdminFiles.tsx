@@ -267,6 +267,7 @@ const AdminFiles = () => {
         />
       )}
     </div>
+    </DropZone>
   );
 };
 
