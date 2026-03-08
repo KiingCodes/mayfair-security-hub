@@ -248,8 +248,30 @@ const AdminDashboard = () => {
       fetchAll();
     }
   };
+  const handleInviteStaff = async () => {
+    if (!inviteForm.email || !inviteForm.full_name) return;
+    setInviting(true);
+    setInviteResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("invite-staff", {
+        body: {
+          email: inviteForm.email,
+          full_name: inviteForm.full_name,
+          position: inviteForm.position,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setInviteResult({ email: data.email, temp_password: data.temp_password });
+      toast({ title: "Staff Invited!", description: `Account created for ${inviteForm.full_name}.` });
+      fetchAll();
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    }
+    setInviting(false);
+  };
 
-  const updateIncidentStatus = async (id: string, status: string) => {
+
     const { error } = await supabase.from("incidents").update({ status }).eq("id", id);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
