@@ -899,6 +899,21 @@ const AdminDashboard = () => {
               </Table>
             </div>
           </TabsContent>
+
+          {/* Invoices */}
+          <TabsContent value="invoices">
+            <AdminInvoices clients={clients} />
+          </TabsContent>
+
+          {/* Contracts */}
+          <TabsContent value="contracts">
+            <AdminContracts clients={clients} />
+          </TabsContent>
+
+          {/* Guard Requests */}
+          <TabsContent value="guard-requests">
+            <AdminGuardRequests clients={clients} />
+          </TabsContent>
         </Tabs>
       </div>
 
