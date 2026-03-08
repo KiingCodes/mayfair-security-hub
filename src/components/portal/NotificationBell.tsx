@@ -64,8 +64,7 @@ const NotificationBell = () => {
         icon: "/favicon.ico",
         badge: "/favicon.ico",
         tag: "mayfair-notification",
-        renotify: true,
-      });
+      } as NotificationOptions);
       if (link) {
         n.onclick = () => {
           window.focus();
