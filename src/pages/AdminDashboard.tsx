@@ -252,6 +252,24 @@ const AdminDashboard = () => {
       fetchAll();
     }
   };
+
+  const handleResetPassword = async () => {
+    if (!resetTarget) return;
+    setResetting(true);
+    setResetResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("reset-staff-password", {
+        body: { user_id: resetTarget.user_id },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setResetResult(data.new_password);
+      toast({ title: "Password Reset", description: `New password generated for ${resetTarget.full_name}.` });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    }
+    setResetting(false);
+  };
   const handleInviteStaff = async () => {
     if (!inviteForm.email || !inviteForm.full_name) return;
     setInviting(true);
