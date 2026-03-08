@@ -16,10 +16,9 @@ const values = [
 ];
 
 const certifications = [
-  { name: "ISO 9001:2015", description: "Quality Management System" },
   { name: "PSIRA Registered", description: "Private Security Industry Regulatory Authority" },
+  { name: "K2025/638289/07", description: "CIPC Registration Number" },
   { name: "SIA Approved", description: "Security Industry Authority Licensed" },
-  { name: "BSIA Member", description: "British Security Industry Association" },
   { name: "ACS Pacesetters", description: "Approved Contractor Scheme" },
   { name: "SafeContractor", description: "Health & Safety Accredited" },
 ];
