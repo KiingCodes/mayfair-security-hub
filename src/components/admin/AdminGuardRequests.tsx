@@ -43,6 +43,31 @@ const AdminGuardRequests = ({ clients }: AdminGuardRequestsProps) => {
     if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
     else {
       toast({ title: "Updated", description: `Request ${status}.` });
+
+      // Send email notification to client on approve/reject
+      if (status === "approved" || status === "rejected") {
+        const req = requests.find(r => r.id === id);
+        if (req) {
+          const { data: userEmail } = await supabase.rpc("get_user_email", { uid: req.user_id });
+          if (userEmail) {
+            supabase.functions.invoke("send-client-email", {
+              body: {
+                type: "guard_request_update",
+                to: [userEmail],
+                data: {
+                  status,
+                  location: req.location,
+                  date_needed: new Date(req.date_needed).toLocaleDateString(),
+                  num_guards: req.num_guards,
+                  duration: req.duration,
+                  admin_notes: notes || null,
+                },
+              },
+            }).catch(() => {});
+          }
+        }
+      }
+
       setNotesDialog(false);
       setSelectedRequest(null);
       setAdminNotes("");
