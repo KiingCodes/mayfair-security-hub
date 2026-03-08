@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
-  LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle
+  LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle,
+  Bell, ShieldAlert, CheckCircle2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
