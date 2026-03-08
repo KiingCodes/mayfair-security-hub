@@ -318,6 +318,108 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
 
+          {/* Emergency Alerts */}
+          <TabsContent value="alerts">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-heading font-bold flex items-center gap-2">
+                <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
+                <span className="flex items-center gap-1 text-xs text-muted-foreground ml-2">
+                  <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Real-time
+                </span>
+              </h2>
+            </div>
+
+            {alerts.filter(a => a.status === "active").length > 0 && (
+              <div className="bg-destructive/10 border-2 border-destructive rounded-xl p-4 mb-6">
+                <p className="font-bold text-destructive flex items-center gap-2">
+                  <Bell className="w-5 h-5 animate-bounce" />
+                  {alerts.filter(a => a.status === "active").length} active alert(s) require immediate attention!
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {alerts.map((alert: any) => (
+                <div
+                  key={alert.id}
+                  className={`bg-card border rounded-xl p-5 ${
+                    alert.status === "active" ? "border-destructive shadow-lg" : ""
+                  }`}
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold capitalize text-base">
+                          {alert.alert_type.replace("_", " ")}
+                        </span>
+                        <Badge variant={
+                          alert.status === "active" ? "destructive" :
+                          alert.status === "responding" ? "default" : "secondary"
+                        }>
+                          {alert.status}
+                        </Badge>
+                        <Badge variant="outline">{alert.severity}</Badge>
+                      </div>
+                      {alert.location && <p className="text-sm text-muted-foreground">📍 {alert.location}</p>}
+                      {alert.description && <p className="text-sm mt-1">{alert.description}</p>}
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {new Date(alert.created_at).toLocaleString()}
+                      </p>
+                      {alert.admin_notes && (
+                        <p className="text-sm mt-2 text-primary bg-primary/5 rounded p-2">
+                          <strong>Notes:</strong> {alert.admin_notes}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-2 shrink-0">
+                      {alert.status === "active" && (
+                        <>
+                          <Button size="sm" onClick={() => updateAlertStatus(alert.id, "responding")}>
+                            <Bell className="w-4 h-4 mr-1" /> Responding
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => setRespondingId(alert.id)}>
+                            <CheckCircle2 className="w-4 h-4 mr-1" /> Resolve
+                          </Button>
+                        </>
+                      )}
+                      {alert.status === "responding" && (
+                        <Button size="sm" variant="outline" onClick={() => setRespondingId(alert.id)}>
+                          <CheckCircle2 className="w-4 h-4 mr-1" /> Resolve
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  {respondingId === alert.id && (
+                    <div className="mt-4 flex gap-2 items-end">
+                      <div className="flex-1">
+                        <Label className="text-xs">Resolution notes</Label>
+                        <Input
+                          value={adminNotes}
+                          onChange={(e: any) => setAdminNotes(e.target.value)}
+                          placeholder="How was this resolved?"
+                        />
+                      </div>
+                      <Button size="sm" onClick={() => updateAlertStatus(alert.id, "resolved", adminNotes)}>
+                        Confirm
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => { setRespondingId(null); setAdminNotes(""); }}>
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {alerts.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground">
+                  <ShieldAlert className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>No emergency alerts. All clear!</p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
           {/* Gallery Management */}
           <TabsContent value="gallery">
             <div className="flex items-center justify-between mb-6">
