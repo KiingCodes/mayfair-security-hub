@@ -263,6 +263,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_cancellation_updates: boolean
+          email_emergency_alerts: boolean
+          email_incidents: boolean
+          email_patrol_digest: boolean
+          email_welcome: boolean
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_cancellation_updates?: boolean
+          email_emergency_alerts?: boolean
+          email_incidents?: boolean
+          email_patrol_digest?: boolean
+          email_welcome?: boolean
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_cancellation_updates?: boolean
+          email_emergency_alerts?: boolean
+          email_incidents?: boolean
+          email_patrol_digest?: boolean
+          email_welcome?: boolean
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -461,6 +497,10 @@ export type Database = {
           recipient_emails: string[]
         }
         Returns: undefined
+      }
+      user_wants_email: {
+        Args: { p_email_type: string; p_user_id: string }
+        Returns: boolean
       }
     }
     Enums: {
