@@ -37,12 +37,7 @@ const reportTypes = [
   { name: "Daily Reports", icon: Clock, color: "bg-blue-500" },
 ];
 
-const mockGuards = [
-  { name: "Officer Johnson", status: "On Patrol", zone: "Zone A", lastCheckIn: "5 min ago" },
-  { name: "Officer Smith", status: "At Checkpoint", zone: "Zone B", lastCheckIn: "2 min ago" },
-  { name: "Officer Williams", status: "On Patrol", zone: "Zone C", lastCheckIn: "8 min ago" },
-  { name: "Officer Davis", status: "Break", zone: "Zone A", lastCheckIn: "12 min ago" },
-];
+const mockGuards: { name: string; status: string; zone: string; lastCheckIn: string }[] = [];
 
 const LiveTracking = () => {
   return (

@@ -11,50 +11,7 @@ import { Label } from "@/components/ui/label";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 
-const jobs = [
-  {
-    title: "Armed Security Officer",
-    location: "Multiple Locations",
-    type: "Full-time",
-    salary: "$45,000 - $60,000",
-    requirements: ["Valid firearms license", "3+ years experience", "Clean background", "First aid certified"],
-  },
-  {
-    title: "Unarmed Security Guard",
-    location: "Downtown District",
-    type: "Full-time / Part-time",
-    salary: "$35,000 - $45,000",
-    requirements: ["Security license", "High school diploma", "Good communication", "Reliable transport"],
-  },
-  {
-    title: "Mobile Patrol Officer",
-    location: "City-wide",
-    type: "Full-time",
-    salary: "$40,000 - $50,000",
-    requirements: ["Valid driver's license", "Security experience", "GPS proficient", "Night shift availability"],
-  },
-  {
-    title: "Event Security Specialist",
-    location: "Various Venues",
-    type: "Part-time / Contract",
-    salary: "$20 - $30/hour",
-    requirements: ["Crowd management experience", "Flexible schedule", "Physical fitness", "Team player"],
-  },
-  {
-    title: "Control Room Operator",
-    location: "Head Office",
-    type: "Full-time",
-    salary: "$38,000 - $48,000",
-    requirements: ["CCTV monitoring experience", "Computer literate", "Attention to detail", "Shift work"],
-  },
-  {
-    title: "Executive Protection Agent",
-    location: "As Assigned",
-    type: "Full-time",
-    salary: "$60,000 - $80,000",
-    requirements: ["5+ years EP experience", "Military/law enforcement background", "Defensive driving", "Passport ready"],
-  },
-];
+const jobs: { title: string; location: string; type: string; salary: string; requirements: string[] }[] = [];
 
 const benefits = [
   "Competitive salary packages",

@@ -206,8 +206,8 @@ const ClientPortal = () => {
 
                 <div className="mt-6 text-center text-sm text-muted-foreground">
                   <p>Need help? Contact us at</p>
-                  <a href="mailto:support@mayfairsecurity.com" className="text-primary font-semibold">
-                    support@mayfairsecurity.com
+                  <a href="#" className="text-primary font-semibold">
+                    your@email.com
                   </a>
                 </div>
               </div>

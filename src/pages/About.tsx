@@ -41,8 +41,8 @@ const About = () => {
                 About Mayfair Security Services
               </h1>
               <p className="text-xl text-white/90 mb-6">
-                Think Ahead, Protect Smarter. For over 15 years, we've been the trusted 
-                security partner for businesses, events, and individuals across the nation.
+                Think Ahead, Protect Smarter. We are a trusted 
+                security partner for businesses, events, and individuals.
               </p>
               <p className="text-white/80">
                 Founded on principles of integrity, professionalism, and excellence, 
