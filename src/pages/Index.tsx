@@ -44,7 +44,7 @@ const Index = () => {
               transition={{ duration: 0.8 }}
             >
               <span className="inline-block bg-white/20 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                🛡️ Trusted Security Partner Since 2008
+                🛡️ Your Trusted Security Partner
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-white leading-tight mb-6">
                 Professional Security Solutions You Can{" "}
