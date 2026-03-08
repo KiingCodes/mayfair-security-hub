@@ -12,7 +12,71 @@ import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const jobs: { title: string; location: string; type: string; salary: string; requirements: string[] }[] = [];
+const jobs: { title: string; location: string; type: string; salary: string; requirements: string[] }[] = [
+  {
+    title: "Security Guard (Armed)",
+    location: "Gauteng, Multiple Sites",
+    type: "Full-Time / Shift Work",
+    salary: "R8,000 – R12,000/month",
+    requirements: ["PSIRA Grade B or higher", "Valid firearm competency", "Clean criminal record", "Physically fit"],
+  },
+  {
+    title: "Security Guard (Unarmed)",
+    location: "Gauteng, Multiple Sites",
+    type: "Full-Time / Shift Work",
+    salary: "R6,000 – R9,000/month",
+    requirements: ["PSIRA Grade C or higher", "Clean criminal record", "Reliable & punctual", "Basic English proficiency"],
+  },
+  {
+    title: "Control Room Operator",
+    location: "Johannesburg HQ",
+    type: "Full-Time / 12hr Shifts",
+    salary: "R10,000 – R14,000/month",
+    requirements: ["PSIRA registered", "Computer literate", "Experience with CCTV systems", "Calm under pressure"],
+  },
+  {
+    title: "Armed Response Officer",
+    location: "Gauteng Region",
+    type: "Full-Time / Rotating Shifts",
+    salary: "R12,000 – R16,000/month",
+    requirements: ["PSIRA Grade B", "Valid firearm competency", "Valid driver's licence", "Tactical training preferred"],
+  },
+  {
+    title: "Site Supervisor",
+    location: "Johannesburg & Pretoria",
+    type: "Full-Time",
+    salary: "R14,000 – R18,000/month",
+    requirements: ["PSIRA Grade A or B", "3+ years security experience", "Leadership skills", "Report writing ability"],
+  },
+  {
+    title: "Electric Fence Technician",
+    location: "Gauteng Region",
+    type: "Full-Time",
+    salary: "R10,000 – R15,000/month",
+    requirements: ["Electric fence installer certificate", "Valid driver's licence", "Experience with Nemtek/Stafix systems", "Physically fit"],
+  },
+  {
+    title: "CCTV & Alarm Installer",
+    location: "Gauteng Region",
+    type: "Full-Time",
+    salary: "R10,000 – R15,000/month",
+    requirements: ["CCTV installation experience", "IP camera & NVR knowledge", "Valid driver's licence", "Hikvision/Dahua experience preferred"],
+  },
+  {
+    title: "VIP Protection Officer",
+    location: "Gauteng & Nationwide",
+    type: "Full-Time / Contract",
+    salary: "R15,000 – R22,000/month",
+    requirements: ["PSIRA Grade A", "Close protection training", "Valid firearm competency", "Tactical driving skills"],
+  },
+  {
+    title: "K9 Handler",
+    location: "Gauteng Region",
+    type: "Full-Time",
+    salary: "R10,000 – R14,000/month",
+    requirements: ["PSIRA registered", "Dog handling certification", "Experience with patrol dogs", "Physically fit & dedicated"],
+  },
+];
 
 const benefits = [
   "Competitive salary packages",
