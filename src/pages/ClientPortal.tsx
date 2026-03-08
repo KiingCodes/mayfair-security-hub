@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
 import logo from "@/assets/logo.png";
 import ClientDashboard from "@/components/portal/ClientDashboard";
+import NotificationBell from "@/components/portal/NotificationBell";
 
 const portalFeatures = [
   { icon: FileText, title: "View Invoices", description: "Access and download all your invoices" },
