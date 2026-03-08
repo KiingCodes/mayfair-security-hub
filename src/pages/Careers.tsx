@@ -86,6 +86,22 @@ const Careers = () => {
 
       if (error) throw error;
 
+      // Send email notification (fire and forget)
+      supabase.functions.invoke("send-notification", {
+        body: {
+          type: "job_application",
+          data: {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            position: formData.position.trim(),
+            experience: formData.experience.trim(),
+            message: formData.message.trim(),
+            cv_url: cvUrl || "",
+          },
+        },
+      });
+
       toast({ title: "Application Submitted!", description: "We'll review your application and contact you soon." });
       setFormData({ name: "", email: "", phone: "", position: "", experience: "", message: "" });
       setSelectedFile(null);
