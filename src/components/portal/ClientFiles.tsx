@@ -217,6 +217,7 @@ const ClientFiles = () => {
         />
       )}
     </motion.div>
+    </DropZone>
   );
 };
 
