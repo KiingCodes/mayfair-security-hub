@@ -235,8 +235,14 @@ const AdminDashboard = () => {
 
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-6 mb-8">
+          <TabsList className="grid w-full grid-cols-7 mb-8">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="alerts" className="relative">
+              🚨 Alerts
+              {stats.alerts > 0 && (
+                <Badge variant="destructive" className="ml-1 text-xs px-1.5 py-0 animate-pulse">{stats.alerts}</Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
             <TabsTrigger value="staff">Staff</TabsTrigger>
             <TabsTrigger value="clients">Clients</TabsTrigger>
