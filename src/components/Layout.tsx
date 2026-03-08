@@ -19,6 +19,7 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
       <Footer />
       <FloatingButtons />
+      <CookieConsent />
     </div>
   );
 };
