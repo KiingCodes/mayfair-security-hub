@@ -18,6 +18,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import StaffPortal from "./pages/StaffPortal";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 const queryClient = new QueryClient();
 
