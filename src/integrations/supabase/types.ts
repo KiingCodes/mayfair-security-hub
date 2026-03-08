@@ -47,6 +47,39 @@ export type Database = {
         }
         Relationships: []
       }
+      gallery_items: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string
+          sort_order: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url: string
+          sort_order?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string
+          sort_order?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       guard_checkins: {
         Row: {
           checked_in_at: string
@@ -219,6 +252,69 @@ export type Database = {
           created_at?: string
           id?: string
           phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      staff_profiles: {
+        Row: {
+          certifications: string[] | null
+          created_at: string
+          email: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          emergency_contact_relation: string | null
+          full_name: string
+          id: string
+          id_number: string | null
+          phone: string | null
+          photo_url: string | null
+          position: string | null
+          psira_expiry: string | null
+          psira_number: string | null
+          skills: string[] | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          certifications?: string[] | null
+          created_at?: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relation?: string | null
+          full_name: string
+          id?: string
+          id_number?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          position?: string | null
+          psira_expiry?: string | null
+          psira_number?: string | null
+          skills?: string[] | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          certifications?: string[] | null
+          created_at?: string
+          email?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relation?: string | null
+          full_name?: string
+          id?: string
+          id_number?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          position?: string | null
+          psira_expiry?: string | null
+          psira_number?: string | null
+          skills?: string[] | null
+          status?: string | null
           updated_at?: string
           user_id?: string
         }
