@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { 
+import { Link, useNavigate } from "react-router-dom";
+import {
   Shield, Lock, Eye, FileText, Users, Download,
-  ChevronRight, Mail
+  ChevronRight, LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import logo from "@/assets/logo.png";
+import ClientDashboard from "@/components/portal/ClientDashboard";
 
 const portalFeatures = [
   { icon: FileText, title: "View Invoices", description: "Access and download all your invoices" },
@@ -21,7 +23,9 @@ const portalFeatures = [
 
 const ClientPortal = () => {
   const { toast } = useToast();
+  const { user, loading, signIn, signUp, signOut } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,20 +33,52 @@ const ClientPortal = () => {
     company: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
+
     if (isLogin) {
-      toast({
-        title: "Login Feature",
-        description: "Client portal login requires backend integration. Contact us for access.",
-      });
+      const { error } = await signIn(formData.email, formData.password);
+      if (error) {
+        toast({ title: "Login Failed", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Welcome back!", description: "You're now signed in." });
+      }
     } else {
-      toast({
-        title: "Registration Request Sent",
-        description: "We'll set up your portal access within 24 hours.",
-      });
+      if (formData.password !== formData.confirmPassword) {
+        toast({ title: "Error", description: "Passwords don't match.", variant: "destructive" });
+        setSubmitting(false);
+        return;
+      }
+      const { error } = await signUp(formData.email, formData.password, formData.company);
+      if (error) {
+        toast({ title: "Sign Up Failed", description: error.message, variant: "destructive" });
+      } else {
+        toast({ title: "Account Created!", description: "Check your email to confirm your account." });
+      }
     }
+    setSubmitting(false);
   };
+
+  // If user is logged in, show dashboard
+  if (user) {
+    return (
+      <Layout>
+        <section className="py-8 gradient-hero">
+          <div className="container mx-auto px-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Shield className="w-8 h-8 text-white" />
+              <h1 className="text-2xl font-heading font-bold text-white">Client Dashboard</h1>
+            </div>
+            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-foreground" onClick={signOut}>
+              <LogOut className="mr-2 w-4 h-4" /> Sign Out
+            </Button>
+          </div>
+        </section>
+        <ClientDashboard />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -59,7 +95,7 @@ const ClientPortal = () => {
               Client Portal
             </h1>
             <p className="text-xl text-white/90">
-              Access your secure dashboard to manage invoices, view reports, 
+              Access your secure dashboard to manage invoices, view reports,
               and request services.
             </p>
           </motion.div>
@@ -102,7 +138,7 @@ const ClientPortal = () => {
 
               <div className="mt-8 p-6 bg-accent/10 rounded-xl border border-accent/20">
                 <p className="text-sm text-muted-foreground">
-                  <strong className="text-foreground">New client?</strong> Contact us to set up your 
+                  <strong className="text-foreground">New client?</strong> Contact us to set up your
                   portal access. Existing clients should have received login credentials via email.
                 </p>
                 <Link to="/contact" className="inline-flex items-center text-primary font-semibold text-sm mt-2">
@@ -122,7 +158,6 @@ const ClientPortal = () => {
                   <img src={logo} alt="Mayfair Security" className="h-20" />
                 </div>
 
-                {/* Tabs */}
                 <div className="flex gap-2 mb-6">
                   <button
                     className={`flex-1 py-3 rounded-lg font-semibold transition-colors ${
@@ -138,7 +173,7 @@ const ClientPortal = () => {
                     }`}
                     onClick={() => setIsLogin(false)}
                   >
-                    Request Access
+                    Register
                   </button>
                 </div>
 
@@ -172,6 +207,7 @@ const ClientPortal = () => {
                       id="password"
                       type="password"
                       required
+                      minLength={6}
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     />
@@ -190,26 +226,11 @@ const ClientPortal = () => {
                     </div>
                   )}
 
-                  {isLogin && (
-                    <div className="text-right">
-                      <a href="#" className="text-sm text-primary hover:underline">
-                        Forgot Password?
-                      </a>
-                    </div>
-                  )}
-
-                  <Button type="submit" size="lg" className="w-full btn-primary-glow">
+                  <Button type="submit" size="lg" className="w-full btn-primary-glow" disabled={submitting}>
                     <Lock className="mr-2 w-5 h-5" />
-                    {isLogin ? 'Sign In' : 'Request Access'}
+                    {submitting ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
                   </Button>
                 </form>
-
-                <div className="mt-6 text-center text-sm text-muted-foreground">
-                  <p>Need help? Contact us at</p>
-                  <a href="#" className="text-primary font-semibold">
-                    your@email.com
-                  </a>
-                </div>
               </div>
             </motion.div>
           </div>
