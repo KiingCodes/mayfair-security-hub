@@ -37,7 +37,6 @@ const Settings = () => {
     confirmPassword: "",
   });
   const [profileLoaded, setProfileLoaded] = useState(false);
-  const [profileLoaded, setProfileLoaded] = useState(false);
 
   const { data: profile } = useQuery({
     queryKey: ["my-profile"],
