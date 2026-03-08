@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
   LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle,
-  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity
+  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity, Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,26 @@ const fadeUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.4 },
+};
+
+const exportToCsv = (filename: string, rows: Record<string, any>[], columns?: string[]) => {
+  if (rows.length === 0) return;
+  const keys = columns || Object.keys(rows[0]);
+  const header = keys.join(",");
+  const csv = [header, ...rows.map(row =>
+    keys.map(k => {
+      const val = row[k] ?? "";
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    }).join(",")
+  )].join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${filename}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 };
 
 const AdminDashboard = () => {
@@ -381,11 +401,14 @@ const AdminDashboard = () => {
           <TabsContent value="alerts">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
-                <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
+              <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground ml-2 bg-muted px-2.5 py-1 rounded-full">
                   <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Real-time
                 </span>
               </h2>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv("alerts", alerts, ["alert_type", "severity", "status", "location", "description", "admin_notes", "created_at", "resolved_at"])} disabled={alerts.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Export CSV
+              </Button>
             </div>
 
             {alerts.filter(a => a.status === "active").length > 0 && (
@@ -536,9 +559,14 @@ const AdminDashboard = () => {
 
           {/* Staff Management */}
           <TabsContent value="staff">
-            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
-              <UserCheck className="w-5 h-5 text-primary" /> Staff Management
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-heading font-bold flex items-center gap-2">
+                <UserCheck className="w-5 h-5 text-primary" /> Staff Management
+              </h2>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv("staff", staffProfiles, ["full_name", "position", "psira_number", "phone", "email", "status", "created_at"])} disabled={staffProfiles.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Export CSV
+              </Button>
+            </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
@@ -594,9 +622,14 @@ const AdminDashboard = () => {
 
           {/* Clients Management */}
           <TabsContent value="clients">
-            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
-              <Users className="w-5 h-5 text-primary" /> Client Management
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-heading font-bold flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" /> Client Management
+              </h2>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv("clients", clients, ["company_name", "phone", "address", "created_at"])} disabled={clients.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Export CSV
+              </Button>
+            </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
@@ -631,9 +664,14 @@ const AdminDashboard = () => {
 
           {/* Incidents */}
           <TabsContent value="incidents">
-            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-accent" /> Incident Reports
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-heading font-bold flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-accent" /> Incident Reports
+              </h2>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv("incidents", incidents, ["incident_type", "location", "severity", "reporter_name", "status", "description", "created_at"])} disabled={incidents.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Export CSV
+              </Button>
+            </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
@@ -684,9 +722,14 @@ const AdminDashboard = () => {
 
           {/* Cancellations */}
           <TabsContent value="cancellations">
-            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
-              <XCircle className="w-5 h-5 text-accent" /> Contract Cancellation Requests
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-heading font-bold flex items-center gap-2">
+                <XCircle className="w-5 h-5 text-accent" /> Contract Cancellation Requests
+              </h2>
+              <Button variant="outline" size="sm" onClick={() => exportToCsv("cancellations", cancellations, ["reason", "status", "created_at", "updated_at"])} disabled={cancellations.length === 0}>
+                <Download className="w-4 h-4 mr-2" /> Export CSV
+              </Button>
+            </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
