@@ -52,8 +52,13 @@ const AdminDashboard = () => {
   // Cancellations state
   const [cancellations, setCancellations] = useState<any[]>([]);
 
+  // Emergency alerts state
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [respondingId, setRespondingId] = useState<string | null>(null);
+  const [adminNotes, setAdminNotes] = useState("");
+
   // Stats
-  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0 });
+  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0, alerts: 0 });
 
   useEffect(() => {
     fetchAll();
