@@ -125,7 +125,29 @@ const AdminHelpDesk = () => {
         setSelectedTicket((t: any) => ({ ...t, status: "in_progress" }));
         fetchTickets();
       }
+
+      // Send email notification to client
+      const msgText = newMessage.trim();
       setNewMessage("");
+
+      try {
+        const { data: emailData } = await supabase.rpc("get_user_email", { uid: selectedTicket.user_id });
+        if (emailData) {
+          supabase.functions.invoke("send-client-email", {
+            body: {
+              type: "ticket_reply",
+              to: [emailData],
+              data: {
+                subject: selectedTicket.subject,
+                status: selectedTicket.status === "open" ? "In Progress" : selectedTicket.status.replace("_", " "),
+                message: msgText,
+                helpdesk_url: `${window.location.origin}/help-desk`,
+              },
+            },
+          }).catch(() => {});
+        }
+      } catch {}
+
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" });
     }
