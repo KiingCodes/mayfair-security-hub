@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import FilePreview from "@/components/shared/FilePreview";
+import DropZone from "@/components/shared/DropZone";
 
 interface SharedFile {
   id: string;
@@ -80,9 +81,8 @@ const AdminFiles = () => {
 
   useEffect(() => { fetchFiles(); }, [selectedClient]);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user || !selectedClient || selectedClient === "all") {
+  const uploadFile = async (file: File) => {
+    if (!user || !selectedClient || selectedClient === "all") {
       if (!selectedClient || selectedClient === "all") toast({ title: "Select a client first", variant: "destructive" });
       return;
     }
@@ -111,7 +111,12 @@ const AdminFiles = () => {
       fetchFiles();
     }
     setUploading(false);
-    e.target.value = "";
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) await uploadFile(file);
+    if (e.target) e.target.value = "";
   };
 
   const handleDownload = async (file: SharedFile) => {
@@ -148,6 +153,7 @@ const AdminFiles = () => {
   );
 
   return (
+    <DropZone onFileDrop={uploadFile} disabled={uploading || !selectedClient || selectedClient === "all"}>
     <div className="space-y-6">
       {/* Client Selector & Search */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -259,6 +265,7 @@ const AdminFiles = () => {
         />
       )}
     </div>
+    </DropZone>
   );
 };
 

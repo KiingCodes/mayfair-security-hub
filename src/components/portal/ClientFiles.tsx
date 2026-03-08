@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import FilePreview from "@/components/shared/FilePreview";
+import DropZone from "@/components/shared/DropZone";
 
 interface SharedFile {
   id: string;
@@ -63,9 +64,8 @@ const ClientFiles = () => {
 
   useEffect(() => { fetchFiles(); }, [user]);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
+  const uploadFile = async (file: File) => {
+    if (!user) return;
     if (file.size > 20 * 1024 * 1024) {
       toast({ title: "File too large", description: "Maximum file size is 20MB.", variant: "destructive" });
       return;
@@ -91,7 +91,12 @@ const ClientFiles = () => {
       fetchFiles();
     }
     setUploading(false);
-    e.target.value = "";
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) await uploadFile(file);
+    if (e.target) e.target.value = "";
   };
 
   const handleDownload = async (file: SharedFile) => {
@@ -119,6 +124,7 @@ const ClientFiles = () => {
   };
 
   return (
+    <DropZone onFileDrop={uploadFile} disabled={uploading}>
     <motion.div className="bg-card border rounded-2xl p-6" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-heading font-bold text-lg flex items-center gap-2">
@@ -211,6 +217,7 @@ const ClientFiles = () => {
         />
       )}
     </motion.div>
+    </DropZone>
   );
 };
 
