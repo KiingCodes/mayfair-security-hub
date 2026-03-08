@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import FilePreview from "@/components/shared/FilePreview";
+import DropZone from "@/components/shared/DropZone";
 
 interface SharedFile {
   id: string;
