@@ -63,6 +63,19 @@ const AdminJobApplications = ({ onPendingCount }: AdminJobApplicationsProps) => 
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Updated", description: `Application marked as ${status}.` });
+      
+      // Send email notification to applicant (fire and forget)
+      const app = applications.find((a) => a.id === id);
+      if (app && status !== "pending") {
+        supabase.functions.invoke("send-client-email", {
+          body: {
+            type: "application_status_update",
+            to: [app.email],
+            data: { name: app.name, position: app.position, status },
+          },
+        });
+      }
+
       fetchApplications();
       if (viewing?.id === id) setViewing({ ...viewing!, status });
     }

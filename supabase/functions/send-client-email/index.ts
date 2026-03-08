@@ -306,6 +306,35 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
       </div>
     `),
   }),
+
+  // 13. Job application status update (sent to applicant)
+  application_status_update: (data) => {
+    const statusMessages: Record<string, { emoji: string; title: string; color: string; bg: string; body: string }> = {
+      reviewed: { emoji: "👀", title: "Application Under Review", color: "#2563eb", bg: "#eff6ff", body: "Your application has been reviewed by our team. We'll be in touch with next steps soon." },
+      shortlisted: { emoji: "⭐", title: "You've Been Shortlisted!", color: "#16a34a", bg: "#f0fdf4", body: "Great news! You've been shortlisted for the position. Our team will contact you to discuss next steps." },
+      interview: { emoji: "📅", title: "Interview Invitation", color: "#9333ea", bg: "#faf5ff", body: "Congratulations! We'd like to invite you for an interview. Our team will reach out shortly to schedule a convenient time." },
+      hired: { emoji: "🎉", title: "Welcome to the Team!", color: "#16a34a", bg: "#f0fdf4", body: "Congratulations! We're thrilled to offer you the position. Our HR team will contact you with onboarding details." },
+      rejected: { emoji: "📋", title: "Application Update", color: "#dc2626", bg: "#fef2f2", body: "Thank you for your interest in Mayfair Security. After careful consideration, we've decided to proceed with other candidates. We encourage you to apply for future openings." },
+    };
+    const s = statusMessages[data.status] || statusMessages.reviewed;
+    return {
+      subject: `${s.emoji} Application Update: ${data.position} — ${s.title}`,
+      html: emailWrapper(s.title, `
+        <p style="color:#334155;font-size:15px;line-height:1.6">Hi ${data.name},</p>
+        <div style="background:${s.bg};border-left:4px solid ${s.color};padding:16px;border-radius:0 8px 8px 0;margin:16px 0">
+          <p style="margin:0;font-weight:700;color:${s.color};font-size:16px">${s.title}</p>
+          <p style="margin:8px 0 0;color:#334155;font-size:14px;line-height:1.6">${s.body}</p>
+        </div>
+        <table style="width:100%;border-collapse:collapse;margin:16px 0">
+          <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Position</td>
+              <td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:700">${data.position}</td></tr>
+          <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Status</td>
+              <td style="padding:10px 12px;border:1px solid #e2e8f0;color:${s.color};font-weight:700">${data.status.charAt(0).toUpperCase() + data.status.slice(1)}</td></tr>
+        </table>
+        <p style="color:#64748b;font-size:13px">If you have any questions, feel free to reply to this email.</p>
+      `, "You're receiving this because you applied for a position at Mayfair Security."),
+    };
+  },
 };
 
 Deno.serve(async (req) => {
