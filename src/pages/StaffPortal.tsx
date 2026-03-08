@@ -417,7 +417,6 @@ const StaffPortal = () => {
             </Button>
           </div>
         </motion.div>
-        </motion.div>
       </div>
     </Layout>
   );
