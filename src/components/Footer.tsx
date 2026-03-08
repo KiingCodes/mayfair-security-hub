@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-
+import jeweliqLogo from "@/assets/jeweliq-logo.png";
 
 const Footer = () => {
   return (
@@ -100,6 +100,14 @@ const Footer = () => {
             <Link to="/privacy" className="text-white/60 hover:text-primary transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="text-white/60 hover:text-primary transition-colors">Terms of Service</Link>
           </div>
+        </div>
+
+        {/* Managed By */}
+        <div className="border-t border-white/10 mt-6 pt-6 flex items-center justify-center gap-2">
+          <span className="text-white/40 text-xs">Designed & managed by</span>
+          <a href="https://jeweliq.tech" target="_blank" rel="noopener noreferrer" className="inline-flex items-center hover:opacity-80 transition-opacity">
+            <img src={jeweliqLogo} alt="JewelIQ" className="h-5 w-auto" />
+          </a>
         </div>
       </div>
     </footer>
