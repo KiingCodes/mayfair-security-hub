@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Settings as SettingsIcon, Sun, Moon, Monitor, LogOut,
-  Trash2, User, Mail, Building, Phone, MapPin, Save, Shield
+  Trash2, User, Mail, Building, Phone, MapPin, Save, Shield, Lock
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/hooks/useAuth";
