@@ -40,15 +40,14 @@ const About = () => {
                 About Mayfair Security Services
               </h1>
               <p className="text-xl text-white/90 mb-6">
-                Think Ahead, Protect Smarter. A fresh, dedicated security partner 
+                Think Ahead, Protect Smarter. A dedicated security partner 
                 committed to earning your trust from day one.
               </p>
               <p className="text-white/80">
-                Mayfair Security Services is a newly established security company built 
-                on a foundation of integrity, professionalism, and a genuine passion for 
-                protecting what matters most. While we're new to the industry, our team 
-                brings years of hands-on experience and a hunger to prove ourselves with 
-                every client we serve.
+                Mayfair Security Services is built on a foundation of integrity, 
+                professionalism, and a genuine passion for protecting what matters most. 
+                Our team brings years of hands-on experience and a hunger to prove 
+                ourselves with every client we serve.
               </p>
             </motion.div>
             <motion.div
