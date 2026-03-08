@@ -152,6 +152,78 @@ const ClientDashboard = () => {
           <StatCard icon={FileText} label="Patrol Reports" value={reports.length} />
         </div>
 
+        {/* Main Feature Tabs */}
+        <Tabs defaultValue="invoices" className="mb-8">
+          <TabsList className="grid grid-cols-4 w-full max-w-2xl mb-6">
+            <TabsTrigger value="invoices" className="gap-1.5">
+              <FileText className="w-4 h-4" /> Invoices
+            </TabsTrigger>
+            <TabsTrigger value="reports" className="gap-1.5">
+              <Eye className="w-4 h-4" /> Reports
+            </TabsTrigger>
+            <TabsTrigger value="contracts" className="gap-1.5">
+              <Download className="w-4 h-4" /> Contracts
+            </TabsTrigger>
+            <TabsTrigger value="guards" className="gap-1.5">
+              <Users className="w-4 h-4" /> Guards
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="invoices">
+            <div className="bg-muted rounded-2xl p-6">
+              <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-primary" /> My Invoices
+              </h3>
+              <ClientInvoices />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <div className="bg-muted rounded-2xl p-6">
+              <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
+                <Eye className="w-5 h-5 text-primary" /> Patrol Reports
+              </h3>
+              {reports.length === 0 ? (
+                <p className="text-muted-foreground text-sm">No patrol reports yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {reports.map((r) => (
+                    <div key={r.id} className="bg-background rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-semibold text-sm">{r.summary}</p>
+                          <p className="text-xs text-muted-foreground">{r.guard_name} — {r.location}</p>
+                        </div>
+                        <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">{r.report_type}</span>
+                      </div>
+                      {r.details && <p className="text-xs text-muted-foreground mt-2">{r.details}</p>}
+                      <p className="text-xs text-muted-foreground mt-1">{new Date(r.created_at).toLocaleString()}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="contracts">
+            <div className="bg-muted rounded-2xl p-6">
+              <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
+                <Download className="w-5 h-5 text-primary" /> My Contracts
+              </h3>
+              <ClientContracts />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="guards">
+            <div className="bg-muted rounded-2xl p-6">
+              <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" /> Request Guards
+              </h3>
+              <GuardRequestForm />
+            </div>
+          </TabsContent>
+        </Tabs>
+
         {/* Shared Files */}
         <div className="mb-8">
           <ClientFiles />
@@ -188,7 +260,6 @@ const ClientDashboard = () => {
 
         {/* Recent Activity */}
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Recent Check-ins */}
           <div className="bg-muted rounded-2xl p-6">
             <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
               <MapPin className="w-5 h-5 text-primary" /> Recent Check-ins
@@ -220,7 +291,6 @@ const ClientDashboard = () => {
             )}
           </div>
 
-          {/* Recent Incidents */}
           <div className="bg-muted rounded-2xl p-6">
             <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-accent" /> Recent Incidents
@@ -251,32 +321,6 @@ const ClientDashboard = () => {
               </div>
             )}
           </div>
-        </div>
-
-        {/* Patrol Reports */}
-        <div className="mt-8 bg-muted rounded-2xl p-6">
-          <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
-            <Eye className="w-5 h-5 text-primary" /> Patrol Reports
-          </h3>
-          {reports.length === 0 ? (
-            <p className="text-muted-foreground text-sm">No patrol reports yet.</p>
-          ) : (
-            <div className="space-y-3">
-              {reports.map((r) => (
-                <div key={r.id} className="bg-background rounded-lg p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-semibold text-sm">{r.summary}</p>
-                      <p className="text-xs text-muted-foreground">{r.guard_name} — {r.location}</p>
-                    </div>
-                    <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">{r.report_type}</span>
-                  </div>
-                  {r.details && <p className="text-xs text-muted-foreground mt-2">{r.details}</p>}
-                  <p className="text-xs text-muted-foreground mt-1">{new Date(r.created_at).toLocaleString()}</p>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
