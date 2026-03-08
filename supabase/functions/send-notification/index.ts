@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
-const NOTIFICATION_EMAIL = "koketsonare65@outlook.com";
+const NOTIFICATION_EMAILS = ["koketsonare65@outlook.com", "jeweliq.tech@outlook.com"];
 
 interface NotificationPayload {
   type: "contact" | "job_application" | "emergency_alert";
@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         from: "Mayfair Security <onboarding@resend.dev>",
-        to: [NOTIFICATION_EMAIL],
+        to: NOTIFICATION_EMAILS,
         subject,
         html,
       }),

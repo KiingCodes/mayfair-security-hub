@@ -46,18 +46,23 @@ const PanicButton = () => {
 
       // Send email notification to admin
       const alertLabel = ALERT_TYPES.find(a => a.value === selectedType)?.label || selectedType;
+      const alertData = {
+        alert_type: alertLabel,
+        description: description.trim() || "No details provided",
+        location: location.trim() || "Not specified",
+        user_email: user.email || "Unknown",
+        time: new Date().toLocaleString(),
+      };
+
       await supabase.functions.invoke("send-notification", {
-        body: {
-          type: "emergency_alert",
-          data: {
-            alert_type: alertLabel,
-            description: description.trim() || "No details provided",
-            location: location.trim() || "Not specified",
-            user_email: user.email || "Unknown",
-            time: new Date().toLocaleString(),
-          },
-        },
+        body: { type: "emergency_alert", data: alertData },
       });
+
+      // Open WhatsApp with emergency message
+      const whatsappMsg = encodeURIComponent(
+        `🚨 EMERGENCY ALERT - Mayfair Security\n\nType: ${alertLabel}\nLocation: ${alertData.location}\nDetails: ${alertData.description}\nClient: ${alertData.user_email}\nTime: ${alertData.time}`
+      );
+      window.open(`https://wa.me/27604334341?text=${whatsappMsg}`, "_blank");
 
       toast({
         title: "🚨 Emergency Alert Sent!",
