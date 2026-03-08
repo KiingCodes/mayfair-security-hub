@@ -14,16 +14,249 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contact_submissions: {
+        Row: {
+          company: string | null
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string
+          service: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone: string
+          service?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string
+          service?: string | null
+        }
+        Relationships: []
+      }
+      guard_checkins: {
+        Row: {
+          checked_in_at: string
+          guard_id: string
+          guard_name: string
+          id: string
+          lat: number | null
+          lng: number | null
+          location: string
+          status: string
+        }
+        Insert: {
+          checked_in_at?: string
+          guard_id: string
+          guard_name: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location: string
+          status?: string
+        }
+        Update: {
+          checked_in_at?: string
+          guard_id?: string
+          guard_name?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          location?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      incidents: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          incident_type: string
+          location: string
+          reported_by: string
+          reporter_name: string
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          incident_type: string
+          location: string
+          reported_by: string
+          reporter_name: string
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          incident_type?: string
+          location?: string
+          reported_by?: string
+          reporter_name?: string
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      job_applications: {
+        Row: {
+          created_at: string
+          cv_url: string | null
+          email: string
+          experience: string | null
+          id: string
+          message: string | null
+          name: string
+          phone: string
+          position: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cv_url?: string | null
+          email: string
+          experience?: string | null
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+          position: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cv_url?: string | null
+          email?: string
+          experience?: string | null
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+          position?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      patrol_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          guard_id: string
+          guard_name: string
+          id: string
+          location: string
+          report_type: string
+          summary: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          guard_id: string
+          guard_name: string
+          id?: string
+          location: string
+          report_type?: string
+          summary: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          guard_id?: string
+          guard_name?: string
+          id?: string
+          location?: string
+          report_type?: string
+          summary?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          company_name: string | null
+          created_at: string
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "client" | "guard"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +383,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "client", "guard"],
+    },
   },
 } as const
