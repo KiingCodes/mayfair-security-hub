@@ -826,6 +826,14 @@ const AdminDashboard = () => {
             </div>
           </TabsContent>
 
+          {/* Files */}
+          <TabsContent value="files">
+            <h2 className="text-xl font-heading font-bold flex items-center gap-2 mb-6">
+              <FileText className="w-6 h-6 text-primary" /> File Sharing
+            </h2>
+            <AdminFiles />
+          </TabsContent>
+
           {/* Cancellations */}
           <TabsContent value="cancellations">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
