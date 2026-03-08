@@ -80,6 +80,7 @@ Deno.serve(async (req) => {
 
     const { error: updateError } = await adminClient.auth.admin.updateUserById(user_id, {
       password: newPassword,
+      user_metadata: { must_change_password: true },
     });
 
     if (updateError) {
