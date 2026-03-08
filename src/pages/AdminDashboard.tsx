@@ -136,7 +136,7 @@ const AdminDashboard = () => {
   const filteredAlerts = useMemo(() => filterByDate(alerts), [alerts, dateFrom, dateTo]);
 
   // Stats
-  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0, alerts: 0 });
+  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0, alerts: 0, applications: 0 });
 
   useEffect(() => {
     fetchAll();
