@@ -230,6 +230,59 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
       </div>
     `),
   }),
+
+  // 10. Invoice created notification
+  invoice_created: (data) => ({
+    subject: `🧾 New Invoice: #${data.invoice_number}`,
+    html: emailWrapper("New Invoice Created 🧾", `
+      <p style="color:#334155;font-size:15px;line-height:1.6">A new invoice has been created for your account:</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Invoice #</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:700">${data.invoice_number}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Amount</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:700;color:#1a2332">R${data.amount}</td></tr>
+        ${data.due_date ? `<tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Due Date</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.due_date}</td></tr>` : ""}
+        ${data.description ? `<tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Description</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.description}</td></tr>` : ""}
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Status</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0;color:#dc2626;font-weight:700">${data.status || "Unpaid"}</td></tr>
+      </table>
+      <div style="text-align:center;margin:24px 0">
+        <a href="${data.portal_url || '#'}" style="background:#2d5016;color:#ffffff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">
+          View Invoice in Portal →
+        </a>
+      </div>
+      <p style="color:#64748b;font-size:13px">Please ensure payment is made before the due date to avoid late fees.</p>
+    `),
+  }),
+
+  // 11. Guard request status update
+  guard_request_update: (data) => ({
+    subject: `${data.status === "approved" ? "✅" : "❌"} Guard Request ${data.status === "approved" ? "Approved" : "Rejected"}`,
+    html: emailWrapper(`Guard Request ${data.status === "approved" ? "Approved ✅" : "Rejected ❌"}`, `
+      <div style="background:${data.status === "approved" ? "#f0fdf4;border-left:4px solid #16a34a" : "#fef2f2;border-left:4px solid #dc2626"};padding:16px;border-radius:0 8px 8px 0;margin-bottom:16px">
+        <p style="margin:0;font-weight:700;color:${data.status === "approved" ? "#16a34a" : "#dc2626"};font-size:16px">
+          Your guard request has been ${data.status}
+        </p>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Location</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.location}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Date</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.date_needed}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Guards</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.num_guards}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Duration</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.duration}</td></tr>
+        ${data.admin_notes ? `<tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Admin Notes</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.admin_notes}</td></tr>` : ""}
+      </table>
+      ${data.status === "approved"
+        ? '<p style="color:#334155;font-size:14px;line-height:1.6">Our team will coordinate the deployment of guards for the requested date and location.</p>'
+        : '<p style="color:#334155;font-size:14px;line-height:1.6">If you have questions about this decision, please contact our support team.</p>'}
+    `),
+  }),
 };
 
 Deno.serve(async (req) => {
