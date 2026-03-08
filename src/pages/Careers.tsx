@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Briefcase, MapPin, Clock, DollarSign, Upload,
@@ -12,71 +12,14 @@ import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const jobs: { title: string; location: string; type: string; salary: string; requirements: string[] }[] = [
-  {
-    title: "Security Guard (Armed)",
-    location: "Gauteng, Multiple Sites",
-    type: "Full-Time / Shift Work",
-    salary: "R8,000 – R12,000/month",
-    requirements: ["PSIRA Grade B or higher", "Valid firearm competency", "Clean criminal record", "Physically fit"],
-  },
-  {
-    title: "Security Guard (Unarmed)",
-    location: "Gauteng, Multiple Sites",
-    type: "Full-Time / Shift Work",
-    salary: "R6,000 – R9,000/month",
-    requirements: ["PSIRA Grade C or higher", "Clean criminal record", "Reliable & punctual", "Basic English proficiency"],
-  },
-  {
-    title: "Control Room Operator",
-    location: "Johannesburg HQ",
-    type: "Full-Time / 12hr Shifts",
-    salary: "R10,000 – R14,000/month",
-    requirements: ["PSIRA registered", "Computer literate", "Experience with CCTV systems", "Calm under pressure"],
-  },
-  {
-    title: "Armed Response Officer",
-    location: "Gauteng Region",
-    type: "Full-Time / Rotating Shifts",
-    salary: "R12,000 – R16,000/month",
-    requirements: ["PSIRA Grade B", "Valid firearm competency", "Valid driver's licence", "Tactical training preferred"],
-  },
-  {
-    title: "Site Supervisor",
-    location: "Johannesburg & Pretoria",
-    type: "Full-Time",
-    salary: "R14,000 – R18,000/month",
-    requirements: ["PSIRA Grade A or B", "3+ years security experience", "Leadership skills", "Report writing ability"],
-  },
-  {
-    title: "Electric Fence Technician",
-    location: "Gauteng Region",
-    type: "Full-Time",
-    salary: "R10,000 – R15,000/month",
-    requirements: ["Electric fence installer certificate", "Valid driver's licence", "Experience with Nemtek/Stafix systems", "Physically fit"],
-  },
-  {
-    title: "CCTV & Alarm Installer",
-    location: "Gauteng Region",
-    type: "Full-Time",
-    salary: "R10,000 – R15,000/month",
-    requirements: ["CCTV installation experience", "IP camera & NVR knowledge", "Valid driver's licence", "Hikvision/Dahua experience preferred"],
-  },
-  {
-    title: "VIP Protection Officer",
-    location: "Gauteng & Nationwide",
-    type: "Full-Time / Contract",
-    salary: "R15,000 – R22,000/month",
-    requirements: ["PSIRA Grade A", "Close protection training", "Valid firearm competency", "Tactical driving skills"],
-  },
-  {
-    title: "K9 Handler",
-    location: "Gauteng Region",
-    type: "Full-Time",
-    salary: "R10,000 – R14,000/month",
-    requirements: ["PSIRA registered", "Dog handling certification", "Experience with patrol dogs", "Physically fit & dedicated"],
-  },
-];
+interface JobListing {
+  id: string;
+  title: string;
+  location: string;
+  type: string;
+  salary: string;
+  requirements: string[];
+}
 
 const benefits = [
   "Competitive salary packages",
@@ -101,6 +44,7 @@ const Careers = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [jobs, setJobs] = useState<JobListing[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -109,6 +53,18 @@ const Careers = () => {
     experience: "",
     message: "",
   });
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const { data } = await supabase
+        .from("job_listings")
+        .select("id, title, location, type, salary, requirements")
+        .eq("active", true)
+        .order("sort_order");
+      if (data) setJobs(data as JobListing[]);
+    };
+    fetchJobs();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -150,7 +106,6 @@ const Careers = () => {
 
       if (error) throw error;
 
-      // Send email notification (fire and forget)
       supabase.functions.invoke("send-notification", {
         body: {
           type: "job_application",
@@ -227,7 +182,7 @@ const Careers = () => {
               </div>
               <div className="bg-muted rounded-2xl p-6">
                 <Shield className="w-10 h-10 text-primary mb-4" />
-                <p className="text-3xl font-bold">9</p>
+                <p className="text-3xl font-bold">{jobs.length}</p>
                 <p className="text-muted-foreground">Open Positions</p>
               </div>
               <div className="bg-muted rounded-2xl p-6">
@@ -256,7 +211,7 @@ const Careers = () => {
           {jobs.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {jobs.map((job, index) => (
-                <motion.div key={job.title} className="bg-background rounded-xl p-6 border" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} viewport={{ once: true }}>
+                <motion.div key={job.id} className="bg-background rounded-xl p-6 border" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} viewport={{ once: true }}>
                   <h3 className="font-heading font-bold text-lg mb-4">{job.title}</h3>
                   <div className="space-y-2 mb-4 text-sm">
                     <div className="flex items-center gap-2 text-muted-foreground"><MapPin className="w-4 h-4" />{job.location}</div>
@@ -278,7 +233,7 @@ const Careers = () => {
           ) : (
             <div className="bg-background rounded-xl p-12 text-center border">
               <Briefcase className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">Job listings coming soon. Submit your application below to be considered.</p>
+              <p className="text-muted-foreground">No open positions at the moment. Submit your application below to be considered.</p>
             </div>
           )}
         </div>
