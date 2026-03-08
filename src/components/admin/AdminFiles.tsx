@@ -83,7 +83,8 @@ const AdminFiles = () => {
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user || !selectedClient || selectedClient === "all") {
+  const uploadFile = async (file: File) => {
+    if (!user || !selectedClient || selectedClient === "all") {
       if (!selectedClient || selectedClient === "all") toast({ title: "Select a client first", variant: "destructive" });
       return;
     }
@@ -112,7 +113,12 @@ const AdminFiles = () => {
       fetchFiles();
     }
     setUploading(false);
-    e.target.value = "";
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) await uploadFile(file);
+    if (e.target) e.target.value = "";
   };
 
   const handleDownload = async (file: SharedFile) => {
