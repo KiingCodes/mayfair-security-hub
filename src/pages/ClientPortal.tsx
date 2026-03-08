@@ -77,6 +77,24 @@ const ClientPortal = () => {
             </Button>
           </div>
         </section>
+        {isAdmin && (
+          <section className="container mx-auto px-4 -mt-4 mb-4">
+            <Link to="/admin">
+              <motion.div
+                className="flex items-center gap-4 bg-destructive/10 border border-destructive/30 rounded-xl p-4 hover:bg-destructive/20 transition-colors cursor-pointer"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <LayoutDashboard className="w-8 h-8 text-destructive" />
+                <div className="flex-1">
+                  <h3 className="font-heading font-bold text-destructive">Admin Dashboard</h3>
+                  <p className="text-sm text-muted-foreground">Manage clients, staff, gallery & more</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-destructive" />
+              </motion.div>
+            </Link>
+          </section>
+        )}
         <ClientDashboard />
       </Layout>
     );
