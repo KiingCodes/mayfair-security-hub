@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-import logo from "@/assets/logo-full.png";
+
 
 const Footer = () => {
   return (
@@ -9,8 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <div>
-            <h3 className="font-heading text-xl font-bold mb-2">Mayfair Security Services</h3>
-            <p className="text-white/70 mb-6">
+            <h3 className="font-heading text-xl font-bold mb-2">Mayfair Security Services</h3className="text-white/70 mb-6">
               Think Ahead, Protect Smarter. Your trusted partner in comprehensive security solutions.
             </p>
             <div className="flex gap-4">

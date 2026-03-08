@@ -221,8 +221,8 @@ const About = () => {
               Ready to Work With Us?
             </h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-              Join hundreds of satisfied clients who trust Mayfair Security Services 
-              for their protection needs.
+              Give us the opportunity to earn your trust. Let Mayfair Security Services 
+              be your dedicated security partner from the start.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/contact">
