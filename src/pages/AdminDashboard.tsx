@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
+import DateRangeFilter from "@/components/admin/DateRangeFilter";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
@@ -83,6 +84,41 @@ const AdminDashboard = () => {
   const [alerts, setAlerts] = useState<any[]>([]);
   const [respondingId, setRespondingId] = useState<string | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
+
+  // Date range filter state
+  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
+  const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
+
+  const filterByDate = (rows: any[], dateField = "created_at") => {
+    if (!dateFrom && !dateTo) return rows;
+    return rows.filter(row => {
+      const d = new Date(row[dateField]);
+      if (dateFrom) {
+        const start = new Date(dateFrom);
+        start.setHours(0, 0, 0, 0);
+        if (d < start) return false;
+      }
+      if (dateTo) {
+        const end = new Date(dateTo);
+        end.setHours(23, 59, 59, 999);
+        if (d > end) return false;
+      }
+      return true;
+    });
+  };
+
+  // Reset date filter when switching tabs
+  useEffect(() => {
+    setDateFrom(undefined);
+    setDateTo(undefined);
+  }, [activeTab]);
+
+  // Filtered data
+  const filteredStaff = useMemo(() => filterByDate(staffProfiles), [staffProfiles, dateFrom, dateTo]);
+  const filteredClients = useMemo(() => filterByDate(clients), [clients, dateFrom, dateTo]);
+  const filteredIncidents = useMemo(() => filterByDate(incidents), [incidents, dateFrom, dateTo]);
+  const filteredCancellations = useMemo(() => filterByDate(cancellations), [cancellations, dateFrom, dateTo]);
+  const filteredAlerts = useMemo(() => filterByDate(alerts), [alerts, dateFrom, dateTo]);
 
   // Stats
   const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0, alerts: 0 });
@@ -399,16 +435,19 @@ const AdminDashboard = () => {
 
           {/* Emergency Alerts */}
           <TabsContent value="alerts">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
-              <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
+                <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground ml-2 bg-muted px-2.5 py-1 rounded-full">
                   <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Real-time
                 </span>
               </h2>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv("alerts", alerts, ["alert_type", "severity", "status", "location", "description", "admin_notes", "created_at", "resolved_at"])} disabled={alerts.length === 0}>
-                <Download className="w-4 h-4 mr-2" /> Export CSV
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button variant="outline" size="sm" onClick={() => exportToCsv("alerts", filteredAlerts, ["alert_type", "severity", "status", "location", "description", "admin_notes", "created_at", "resolved_at"])} disabled={filteredAlerts.length === 0}>
+                  <Download className="w-4 h-4 mr-2" /> Export CSV
+                </Button>
+              </div>
             </div>
 
             {alerts.filter(a => a.status === "active").length > 0 && (
@@ -425,7 +464,7 @@ const AdminDashboard = () => {
             )}
 
             <div className="space-y-4">
-              {alerts.map((alert: any) => (
+              {filteredAlerts.map((alert: any) => (
                 <motion.div
                   key={alert.id}
                   className={`bg-card border-2 rounded-2xl p-6 transition-all ${
@@ -498,7 +537,7 @@ const AdminDashboard = () => {
                   )}
                 </motion.div>
               ))}
-              {alerts.length === 0 && (
+              {filteredAlerts.length === 0 && (
                 <div className="text-center py-16 text-muted-foreground">
                   <div className="w-16 h-16 rounded-full bg-secondary mx-auto mb-4 flex items-center justify-center">
                     <ShieldAlert className="w-8 h-8 opacity-50" />
@@ -559,13 +598,16 @@ const AdminDashboard = () => {
 
           {/* Staff Management */}
           <TabsContent value="staff">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
                 <UserCheck className="w-5 h-5 text-primary" /> Staff Management
               </h2>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv("staff", staffProfiles, ["full_name", "position", "psira_number", "phone", "email", "status", "created_at"])} disabled={staffProfiles.length === 0}>
-                <Download className="w-4 h-4 mr-2" /> Export CSV
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button variant="outline" size="sm" onClick={() => exportToCsv("staff", filteredStaff, ["full_name", "position", "psira_number", "phone", "email", "status", "created_at"])} disabled={filteredStaff.length === 0}>
+                  <Download className="w-4 h-4 mr-2" /> Export CSV
+                </Button>
+              </div>
             </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
@@ -580,7 +622,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {staffProfiles.map((s) => (
+                  {filteredStaff.map((s) => (
                     <TableRow key={s.id} className="hover:bg-muted/30">
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
@@ -607,7 +649,7 @@ const AdminDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {staffProfiles.length === 0 && (
+                  {filteredStaff.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                         <UserCheck className="w-10 h-10 mx-auto mb-2 opacity-30" />
@@ -622,13 +664,16 @@ const AdminDashboard = () => {
 
           {/* Clients Management */}
           <TabsContent value="clients">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" /> Client Management
               </h2>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv("clients", clients, ["company_name", "phone", "address", "created_at"])} disabled={clients.length === 0}>
-                <Download className="w-4 h-4 mr-2" /> Export CSV
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button variant="outline" size="sm" onClick={() => exportToCsv("clients", filteredClients, ["company_name", "phone", "address", "created_at"])} disabled={filteredClients.length === 0}>
+                  <Download className="w-4 h-4 mr-2" /> Export CSV
+                </Button>
+              </div>
             </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
@@ -641,7 +686,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {clients.map((c) => (
+                  {filteredClients.map((c) => (
                     <TableRow key={c.id} className="hover:bg-muted/30">
                       <TableCell className="font-semibold">{c.company_name || "—"}</TableCell>
                       <TableCell>{c.phone || "—"}</TableCell>
@@ -649,7 +694,7 @@ const AdminDashboard = () => {
                       <TableCell className="text-muted-foreground text-sm">{new Date(c.created_at).toLocaleDateString()}</TableCell>
                     </TableRow>
                   ))}
-                  {clients.length === 0 && (
+                  {filteredClients.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
                         <Users className="w-10 h-10 mx-auto mb-2 opacity-30" />
@@ -664,13 +709,16 @@ const AdminDashboard = () => {
 
           {/* Incidents */}
           <TabsContent value="incidents">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-accent" /> Incident Reports
               </h2>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv("incidents", incidents, ["incident_type", "location", "severity", "reporter_name", "status", "description", "created_at"])} disabled={incidents.length === 0}>
-                <Download className="w-4 h-4 mr-2" /> Export CSV
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button variant="outline" size="sm" onClick={() => exportToCsv("incidents", filteredIncidents, ["incident_type", "location", "severity", "reporter_name", "status", "description", "created_at"])} disabled={filteredIncidents.length === 0}>
+                  <Download className="w-4 h-4 mr-2" /> Export CSV
+                </Button>
+              </div>
             </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
@@ -685,7 +733,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {incidents.map((inc) => (
+                  {filteredIncidents.map((inc) => (
                     <TableRow key={inc.id} className="hover:bg-muted/30">
                       <TableCell className="font-semibold">{inc.incident_type}</TableCell>
                       <TableCell>{inc.location}</TableCell>
@@ -707,7 +755,7 @@ const AdminDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {incidents.length === 0 && (
+                  {filteredIncidents.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                         <AlertTriangle className="w-10 h-10 mx-auto mb-2 opacity-30" />
@@ -722,13 +770,16 @@ const AdminDashboard = () => {
 
           {/* Cancellations */}
           <TabsContent value="cancellations">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
                 <XCircle className="w-5 h-5 text-accent" /> Contract Cancellation Requests
               </h2>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv("cancellations", cancellations, ["reason", "status", "created_at", "updated_at"])} disabled={cancellations.length === 0}>
-                <Download className="w-4 h-4 mr-2" /> Export CSV
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button variant="outline" size="sm" onClick={() => exportToCsv("cancellations", filteredCancellations, ["reason", "status", "created_at", "updated_at"])} disabled={filteredCancellations.length === 0}>
+                  <Download className="w-4 h-4 mr-2" /> Export CSV
+                </Button>
+              </div>
             </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
@@ -741,7 +792,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {cancellations.map((c: any) => (
+                  {filteredCancellations.map((c: any) => (
                     <TableRow key={c.id} className="hover:bg-muted/30">
                       <TableCell className="font-medium max-w-xs truncate">{c.reason}</TableCell>
                       <TableCell className="text-muted-foreground text-sm">{new Date(c.created_at).toLocaleDateString()}</TableCell>
@@ -764,7 +815,7 @@ const AdminDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {cancellations.length === 0 && (
+                  {filteredCancellations.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
                         <XCircle className="w-10 h-10 mx-auto mb-2 opacity-30" />
