@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import bgContact from "@/assets/bg-contact.jpg";
 
 const contactInfo = [
   { icon: Phone, title: "24/7 Emergency / WhatsApp", value: "062 668 5754", link: "https://wa.me/27626685754", accent: true },
