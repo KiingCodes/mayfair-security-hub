@@ -64,7 +64,13 @@ const Header = () => {
                 Client Portal
               </Button>
             </Link>
-            <ThemeToggle />
+            {user && (
+              <Link to="/settings">
+                <Button variant="ghost" size="icon" className="rounded-full" aria-label="Settings">
+                  <Settings className="w-5 h-5" />
+                </Button>
+              </Link>
+            )}
             <a href="#">
               <Button className="btn-emergency">
                 <Phone className="w-4 h-4 mr-2" />
