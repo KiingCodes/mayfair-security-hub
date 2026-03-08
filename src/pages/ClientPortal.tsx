@@ -54,7 +54,7 @@ const ClientPortal = () => {
       if (error) {
         toast({ title: "Sign Up Failed", description: error.message, variant: "destructive" });
       } else {
-        toast({ title: "Account Created!", description: "Check your email to confirm your account." });
+        toast({ title: "Account Created!", description: "You're now signed in." });
       }
     }
     setSubmitting(false);
