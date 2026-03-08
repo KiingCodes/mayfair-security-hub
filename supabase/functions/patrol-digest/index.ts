@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Get all client emails
+    // Get all client user IDs
     const { data: clients } = await adminClient
       .from("user_roles")
       .select("user_id")
@@ -47,9 +47,19 @@ Deno.serve(async (req) => {
     }
 
     const clientIds = clients.map((c) => c.user_id);
+
+    // Filter by preference: only clients who opted in for patrol digest
+    const { data: prefs } = await adminClient
+      .from("notification_preferences")
+      .select("user_id")
+      .in("user_id", clientIds)
+      .eq("email_patrol_digest", true);
+
+    const optedInIds = prefs ? prefs.map((p) => p.user_id) : clientIds;
+
     const { data: { users } } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
     const clientEmails = users
-      .filter((u) => clientIds.includes(u.id) && u.email)
+      .filter((u) => optedInIds.includes(u.id) && u.email)
       .map((u) => u.email!);
 
     if (clientEmails.length === 0) {
