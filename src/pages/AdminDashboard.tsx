@@ -923,6 +923,11 @@ const AdminDashboard = () => {
           <TabsContent value="helpdesk">
             <AdminHelpDesk />
           </TabsContent>
+
+          {/* Job Listings */}
+          <TabsContent value="jobs">
+            <AdminJobListings />
+          </TabsContent>
         </Tabs>
       </div>
 
