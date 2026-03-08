@@ -8,6 +8,9 @@ import {
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import logo from "@/assets/logo.png";
+import bgHero from "@/assets/bg-hero.jpg";
+import bgTracking from "@/assets/bg-tracking.jpg";
+import bgCta from "@/assets/bg-cta.jpg";
 
 const services = [
   { icon: Shield, title: "Armed Guards", description: "Highly trained armed security personnel for maximum protection" },
@@ -32,9 +35,10 @@ const Index = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0 gradient-hero opacity-95" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-30" />
+        <div className="absolute inset-0">
+          <img src={bgHero} alt="" className="w-full h-full object-cover" loading="eager" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--charcoal))/0.92] via-[hsl(var(--green-dark))/0.85] to-[hsl(var(--charcoal))/0.88]" />
+        </div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -184,8 +188,11 @@ const Index = () => {
       </section>
 
       {/* Live Tracking CTA */}
-      <section className="py-20 gradient-hero relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-30" />
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bgTracking} alt="" className="w-full h-full object-cover" loading="lazy" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--charcoal))/0.9] via-[hsl(var(--green-dark))/0.85] to-[hsl(var(--charcoal))/0.92]" />
+        </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -329,31 +336,37 @@ const Index = () => {
       <section className="py-20 bg-muted">
         <div className="container mx-auto px-4">
           <motion.div
-            className="bg-gradient-to-r from-charcoal to-charcoal/90 rounded-3xl p-8 md:p-12 text-center"
+            className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
-              Ready to Secure Your Property?
-            </h2>
-            <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-              Get started in minutes. Request a free quote or call our 24/7 hotline 
-              for immediate assistance.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/contact">
-                <Button size="lg" className="btn-emergency text-lg">
-                  Get Free Quote
-                  <ChevronRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <a href="#">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-charcoal text-lg">
-                  <Phone className="mr-2 w-5 h-5" />
-                  Call Now
-                </Button>
-              </a>
+            <div className="absolute inset-0">
+              <img src={bgCta} alt="" className="w-full h-full object-cover" loading="lazy" />
+              <div className="absolute inset-0 bg-[hsl(var(--charcoal))/0.8]" />
+            </div>
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+                Ready to Secure Your Property?
+              </h2>
+              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+                Get started in minutes. Request a free quote or call our 24/7 hotline 
+                for immediate assistance.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link to="/contact">
+                  <Button size="lg" className="btn-emergency text-lg">
+                    Get Free Quote
+                    <ChevronRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+                <a href="#">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-charcoal text-lg">
+                    <Phone className="mr-2 w-5 h-5" />
+                    Call Now
+                  </Button>
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>

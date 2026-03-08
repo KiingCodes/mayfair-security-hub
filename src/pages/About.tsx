@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import logo from "@/assets/logo.png";
+import bgAbout from "@/assets/bg-about.jpg";
 
 const values = [
   { icon: Shield, title: "Integrity", description: "We uphold the highest ethical standards in all our operations." },
@@ -29,7 +30,11 @@ const About = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 gradient-hero relative">
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bgAbout} alt="" className="w-full h-full object-cover" loading="eager" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--charcoal))/0.9] via-[hsl(var(--green-dark))/0.85] to-[hsl(var(--charcoal))/0.88]" />
+        </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div

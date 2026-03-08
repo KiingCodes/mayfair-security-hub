@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import bgContact from "@/assets/bg-contact.jpg";
 
 const contactInfo = [
   { icon: Phone, title: "24/7 Emergency / WhatsApp", value: "062 668 5754", link: "https://wa.me/27626685754", accent: true },
@@ -75,7 +76,11 @@ const Contact = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 gradient-hero relative">
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={bgContact} alt="" className="w-full h-full object-cover" loading="eager" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--charcoal))/0.88] via-[hsl(var(--green-dark))/0.82] to-[hsl(var(--charcoal))/0.9]" />
+        </div>
         <div className="container mx-auto px-4 relative z-10">
           <motion.div className="text-center max-w-3xl mx-auto" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl md:text-5xl font-heading font-black text-white mb-6">Contact Us</h1>
