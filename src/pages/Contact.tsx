@@ -13,12 +13,11 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
-  { icon: Phone, title: "24/7 Emergency Hotline", value: "Your Number Here", link: "#", accent: true },
-  { icon: Phone, title: "General Inquiries", value: "Your Number Here", link: "#" },
-  { icon: Mail, title: "Email Us", value: "your@email.com", link: "#" },
-  { icon: MessageCircle, title: "WhatsApp", value: "Your Number Here", link: "#" },
-  { icon: MapPin, title: "Head Office", value: "Your Address Here" },
-  { icon: Clock, title: "Office Hours", value: "Mon-Fri: 8AM-6PM | Emergency: 24/7" },
+  { icon: Phone, title: "24/7 Emergency / WhatsApp", value: "062 668 5754", link: "https://wa.me/27626685754", accent: true },
+  { icon: Phone, title: "2nd Contact Number", value: "068 921 3188", link: "tel:+27689213188" },
+  { icon: MessageCircle, title: "WhatsApp", value: "062 668 5754", link: "https://wa.me/27626685754" },
+  { icon: MapPin, title: "Website", value: "www.mayfairsecurity1.co.za", link: "https://www.mayfairsecurity1.co.za" },
+  { icon: Clock, title: "Office Hours", value: "24/7 - 365 Days" },
 ];
 
 const Contact = () => {

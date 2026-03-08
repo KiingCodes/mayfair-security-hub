@@ -13,11 +13,11 @@ const EmergencyBanner = () => {
         <AlertTriangle className="w-5 h-5 animate-pulse" />
         <span className="font-semibold">24/7 Emergency Hotline:</span>
         <a
-          href="#"
+          href="tel:+27626685754"
           className="flex items-center gap-2 font-bold underline hover:no-underline"
         >
           <Phone className="w-4 h-4" />
-          Your Number Here
+          062 668 5754
         </a>
         <span className="hidden md:inline">— Immediate Response Guaranteed</span>
       </div>

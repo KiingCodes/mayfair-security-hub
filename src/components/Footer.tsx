@@ -62,22 +62,22 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-primary mt-1" />
                 <div>
-                  <p className="text-white/70">24/7 Hotline</p>
-                  <a href="#" className="font-semibold hover:text-primary transition-colors">Your Number Here</a>
+                  <p className="text-white/70">WhatsApp</p>
+                  <a href="https://wa.me/27626685754" target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-primary transition-colors">062 668 5754</a>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-primary mt-1" />
+                <Phone className="w-5 h-5 text-primary mt-1" />
                 <div>
-                  <p className="text-white/70">Email Us</p>
-                  <a href="#" className="font-semibold hover:text-primary transition-colors">your@email.com</a>
+                  <p className="text-white/70">Call Us</p>
+                  <a href="tel:+27689213188" className="font-semibold hover:text-primary transition-colors">068 921 3188</a>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-1" />
                 <div>
-                  <p className="text-white/70">Head Office</p>
-                  <p className="font-semibold">Your Address Here</p>
+                  <p className="text-white/70">Website</p>
+                  <a href="https://www.mayfairsecurity1.co.za" target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-primary transition-colors">www.mayfairsecurity1.co.za</a>
                 </div>
               </li>
               <li className="flex items-start gap-3">
