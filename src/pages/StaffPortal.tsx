@@ -236,6 +236,90 @@ const StaffPortal = () => {
     );
   }
 
+  // Force password change on first login
+  if (mustChangePassword) {
+    return (
+      <Layout>
+        <section className="py-20">
+          <div className="container mx-auto px-4 max-w-md">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-card border rounded-2xl p-8">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
+                  <KeyRound className="w-8 h-8 text-primary" />
+                </div>
+                <h2 className="text-2xl font-heading font-bold">Change Your Password</h2>
+                <p className="text-muted-foreground text-sm mt-2">
+                  You're using a temporary password. Please set a new password to continue.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <Label>New Password</Label>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      value={passwordData.newPassword}
+                      onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                      placeholder="Minimum 6 characters"
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <Label>Confirm New Password</Label>
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                    placeholder="Re-enter new password"
+                  />
+                </div>
+                <Button
+                  className="w-full btn-primary-glow"
+                  disabled={changingPassword || !passwordData.newPassword || !passwordData.confirmPassword}
+                  onClick={async () => {
+                    if (passwordData.newPassword.length < 6) {
+                      toast({ title: "Error", description: "Password must be at least 6 characters.", variant: "destructive" });
+                      return;
+                    }
+                    if (passwordData.newPassword !== passwordData.confirmPassword) {
+                      toast({ title: "Error", description: "Passwords don't match.", variant: "destructive" });
+                      return;
+                    }
+                    setChangingPassword(true);
+                    const { error } = await supabase.auth.updateUser({
+                      password: passwordData.newPassword,
+                      data: { must_change_password: false },
+                    });
+                    if (error) {
+                      toast({ title: "Error", description: error.message, variant: "destructive" });
+                    } else {
+                      toast({ title: "Password Updated", description: "Welcome! You can now access your portal." });
+                      setPasswordData({ newPassword: "", confirmPassword: "" });
+                    }
+                    setChangingPassword(false);
+                  }}
+                >
+                  <Lock className="w-4 h-4 mr-2" />
+                  {changingPassword ? "Updating..." : "Set New Password"}
+                </Button>
+                <Button variant="ghost" className="w-full text-muted-foreground" onClick={signOut}>
+                  Sign Out
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </Layout>
+    );
+  }
+
   // Staff profile form
   return (
     <Layout>
