@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { 
   Shield, Users, Camera, Car, UserCheck, AlertTriangle, 
   Building, Lock, Eye, Radio, Dog, Flashlight, 
-  ChevronRight, CheckCircle, Phone
+  ChevronRight, CheckCircle, Phone, Crosshair, Search,
+  Zap, GraduationCap, Truck, Target, Cog
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
@@ -11,75 +12,105 @@ import Layout from "@/components/Layout";
 const services = [
   {
     icon: Shield,
-    title: "Armed Security Guards",
-    description: "Highly trained armed security personnel licensed to carry firearms. Ideal for high-risk environments, banks, jewelry stores, and VIP protection.",
-    features: ["Licensed & Certified", "Extensive Training", "Background Verified", "Tactical Response Ready"],
+    title: "Security Guarding",
+    description: "Professional uniformed security officers for access control, monitoring, and protection at commercial, residential, and industrial properties.",
+    features: ["24/7 Availability", "Background Verified", "First Aid Certified", "Patrol Trained"],
   },
   {
-    icon: Users,
-    title: "Unarmed Security Officers",
-    description: "Professional uniformed security officers for access control, monitoring, and customer service at commercial and residential properties.",
-    features: ["Customer Focused", "24/7 Availability", "Patrol Trained", "First Aid Certified"],
+    icon: Crosshair,
+    title: "Armed Reaction",
+    description: "Rapid armed response teams on standby to respond to alarms, panic signals, and security breaches within minutes.",
+    features: ["Rapid Response", "Armed Officers", "GPS Dispatched", "24/7 Coverage"],
+  },
+  {
+    icon: UserCheck,
+    title: "VIP Protection",
+    description: "Close protection services for VIPs, executives, dignitaries, and high-net-worth individuals by former military and law enforcement professionals.",
+    features: ["Risk Assessment", "Secure Transport", "Travel Security", "Discreet Service"],
+  },
+  {
+    icon: Search,
+    title: "Investigations",
+    description: "Private investigation services including corporate fraud, background checks, surveillance, and forensic investigations by licensed investigators.",
+    features: ["Corporate Fraud", "Background Checks", "Surveillance", "Forensic Analysis"],
+  },
+  {
+    icon: Camera,
+    title: "CCTV & Alarms",
+    description: "Design, installation, and 24/7 remote monitoring of CCTV systems and alarm systems from our state-of-the-art control room.",
+    features: ["Live Monitoring", "HD Cameras", "Cloud Recording", "Instant Alerts"],
+  },
+  {
+    icon: Building,
+    title: "Special Events",
+    description: "Comprehensive security for concerts, corporate events, weddings, festivals, and public gatherings of any size with crowd management expertise.",
+    features: ["Crowd Management", "Access Control", "Emergency Planning", "VIP Handling"],
+  },
+  {
+    icon: Zap,
+    title: "Electrical Fencing",
+    description: "Supply, installation, and maintenance of electric fencing systems for perimeter protection of residential, commercial, and industrial properties.",
+    features: ["Perimeter Protection", "Energizer Systems", "Alarm Integration", "Maintenance Plans"],
+  },
+  {
+    icon: Cog,
+    title: "Automation",
+    description: "Smart gate automation, garage door motors, access control systems, and integrated security automation for modern properties.",
+    features: ["Gate Motors", "Garage Automation", "Biometric Access", "Smart Integration"],
+  },
+  {
+    icon: GraduationCap,
+    title: "Security Training",
+    description: "PSIRA-accredited security training courses for individuals and organizations including grades A–E, firearm competency, and specialized skills.",
+    features: ["PSIRA Accredited", "Grades A–E", "Firearm Training", "Certification"],
+  },
+  {
+    icon: Target,
+    title: "Tactical Training",
+    description: "Advanced tactical training programs for security professionals, law enforcement, and private clients including combat readiness and scenario-based drills.",
+    features: ["Combat Readiness", "Scenario Drills", "Firearm Proficiency", "Team Tactics"],
+  },
+  {
+    icon: Truck,
+    title: "Armed Escorts",
+    description: "Armed escort and convoy protection services for high-value cargo, cash-in-transit, VIP motorcades, and sensitive logistics operations.",
+    features: ["Cash-in-Transit", "Convoy Protection", "Route Planning", "Armed Personnel"],
+  },
+  {
+    icon: Eye,
+    title: "Undercover Operations",
+    description: "Covert operatives deployed for internal theft investigations, workplace surveillance, corporate intelligence, and loss prevention.",
+    features: ["Covert Agents", "Internal Theft", "Corporate Intel", "Loss Prevention"],
+  },
+  {
+    icon: AlertTriangle,
+    title: "Tactical Response",
+    description: "Elite tactical response unit for high-threat situations including hostage scenarios, armed confrontations, and critical incident management.",
+    features: ["Rapid Deployment", "High-Threat Trained", "Crisis Management", "Police Liaison"],
   },
   {
     icon: Car,
     title: "Mobile Patrol Services",
-    description: "GPS-tracked patrol vehicles conducting random and scheduled patrols of your property with real-time reporting.",
+    description: "GPS-tracked patrol vehicles conducting random and scheduled patrols of your property with real-time reporting and alarm response.",
     features: ["GPS Tracking", "Randomized Routes", "Instant Reporting", "Alarm Response"],
-  },
-  {
-    icon: Camera,
-    title: "CCTV Monitoring",
-    description: "24/7 remote video surveillance from our state-of-the-art monitoring center with immediate incident response.",
-    features: ["Live Monitoring", "Video Analytics", "Cloud Recording", "Instant Alerts"],
-  },
-  {
-    icon: UserCheck,
-    title: "Executive Protection",
-    description: "Close protection services for VIPs, executives, and high-net-worth individuals by former military and law enforcement professionals.",
-    features: ["Risk Assessment", "Secure Transport", "Travel Security", "Discreet Service"],
-  },
-  {
-    icon: Building,
-    title: "Event Security",
-    description: "Comprehensive security solutions for concerts, corporate events, private parties, and public gatherings of any size.",
-    features: ["Crowd Management", "Access Control", "Emergency Planning", "VIP Handling"],
-  },
-  {
-    icon: AlertTriangle,
-    title: "Risk Assessment & Consulting",
-    description: "Professional security audits, vulnerability assessments, and customized security planning by certified experts.",
-    features: ["Site Surveys", "Threat Analysis", "Security Planning", "Compliance Review"],
   },
   {
     icon: Lock,
     title: "Access Control Systems",
-    description: "Design, installation, and management of electronic access control systems including biometrics and key card systems.",
+    description: "Design, installation, and management of electronic access control systems including biometrics, key cards, and visitor management.",
     features: ["Biometric Access", "Key Card Systems", "Visitor Management", "Integration Ready"],
-  },
-  {
-    icon: Eye,
-    title: "Surveillance Systems",
-    description: "Installation and maintenance of advanced CCTV, IP cameras, and integrated security systems.",
-    features: ["HD Cameras", "Night Vision", "Remote Access", "Smart Analytics"],
-  },
-  {
-    icon: Radio,
-    title: "Alarm Response",
-    description: "Rapid response to alarm activations with armed or unarmed officers available 24/7 across our service area.",
-    features: ["Fast Response", "24/7 Availability", "Verified Response", "Police Liaison"],
   },
   {
     icon: Dog,
     title: "K-9 Security Units",
-    description: "Trained security dogs with handlers for patrol, detection, and high-security applications.",
+    description: "Trained security dogs with handlers for patrol, detection, and high-security applications at events and facilities.",
     features: ["Detection Dogs", "Patrol K-9", "Trained Handlers", "Event Support"],
   },
   {
-    icon: Flashlight,
-    title: "Loss Prevention",
-    description: "Retail security specialists focused on reducing shrinkage, shoplifting, and internal theft.",
-    features: ["Undercover Officers", "CCTV Monitoring", "Staff Training", "Investigation Support"],
+    icon: Radio,
+    title: "Risk Assessment & Consulting",
+    description: "Professional security audits, vulnerability assessments, and customized security planning by certified industry experts.",
+    features: ["Site Surveys", "Threat Analysis", "Security Planning", "Compliance Review"],
   },
 ];
 
