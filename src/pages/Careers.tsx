@@ -11,50 +11,7 @@ import { Label } from "@/components/ui/label";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 
-const jobs = [
-  {
-    title: "Armed Security Officer",
-    location: "Multiple Locations",
-    type: "Full-time",
-    salary: "$45,000 - $60,000",
-    requirements: ["Valid firearms license", "3+ years experience", "Clean background", "First aid certified"],
-  },
-  {
-    title: "Unarmed Security Guard",
-    location: "Downtown District",
-    type: "Full-time / Part-time",
-    salary: "$35,000 - $45,000",
-    requirements: ["Security license", "High school diploma", "Good communication", "Reliable transport"],
-  },
-  {
-    title: "Mobile Patrol Officer",
-    location: "City-wide",
-    type: "Full-time",
-    salary: "$40,000 - $50,000",
-    requirements: ["Valid driver's license", "Security experience", "GPS proficient", "Night shift availability"],
-  },
-  {
-    title: "Event Security Specialist",
-    location: "Various Venues",
-    type: "Part-time / Contract",
-    salary: "$20 - $30/hour",
-    requirements: ["Crowd management experience", "Flexible schedule", "Physical fitness", "Team player"],
-  },
-  {
-    title: "Control Room Operator",
-    location: "Head Office",
-    type: "Full-time",
-    salary: "$38,000 - $48,000",
-    requirements: ["CCTV monitoring experience", "Computer literate", "Attention to detail", "Shift work"],
-  },
-  {
-    title: "Executive Protection Agent",
-    location: "As Assigned",
-    type: "Full-time",
-    salary: "$60,000 - $80,000",
-    requirements: ["5+ years EP experience", "Military/law enforcement background", "Defensive driving", "Passport ready"],
-  },
-];
+const jobs: { title: string; location: string; type: string; salary: string; requirements: string[] }[] = [];
 
 const benefits = [
   "Competitive salary packages",
@@ -150,12 +107,12 @@ const Careers = () => {
             >
               <div className="bg-primary rounded-2xl p-6 text-primary-foreground">
                 <Users className="w-10 h-10 mb-4" />
-                <p className="text-3xl font-bold">1,200+</p>
+                <p className="text-3xl font-bold">—</p>
                 <p className="text-primary-foreground/80">Team Members</p>
               </div>
               <div className="bg-muted rounded-2xl p-6">
                 <Shield className="w-10 h-10 text-primary mb-4" />
-                <p className="text-3xl font-bold">15+</p>
+                <p className="text-3xl font-bold">—</p>
                 <p className="text-muted-foreground">Years Experience</p>
               </div>
               <div className="bg-muted rounded-2xl p-6">
@@ -165,7 +122,7 @@ const Careers = () => {
               </div>
               <div className="bg-charcoal rounded-2xl p-6 text-white">
                 <Briefcase className="w-10 h-10 mb-4" />
-                <p className="text-3xl font-bold">500+</p>
+                <p className="text-3xl font-bold">—</p>
                 <p className="text-white/80">Job Sites</p>
               </div>
             </motion.div>
@@ -186,48 +143,55 @@ const Careers = () => {
             <p className="text-muted-foreground mt-2">Find your next career opportunity</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {jobs.map((job, index) => (
-              <motion.div
-                key={job.title}
-                className="bg-background rounded-xl p-6 border"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                viewport={{ once: true }}
-              >
-                <h3 className="font-heading font-bold text-lg mb-4">{job.title}</h3>
-                <div className="space-y-2 mb-4 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin className="w-4 h-4" />
-                    {job.location}
+          {jobs.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {jobs.map((job, index) => (
+                <motion.div
+                  key={job.title}
+                  className="bg-background rounded-xl p-6 border"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  viewport={{ once: true }}
+                >
+                  <h3 className="font-heading font-bold text-lg mb-4">{job.title}</h3>
+                  <div className="space-y-2 mb-4 text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin className="w-4 h-4" />
+                      {job.location}
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Clock className="w-4 h-4" />
+                      {job.type}
+                    </div>
+                    <div className="flex items-center gap-2 text-primary font-semibold">
+                      <DollarSign className="w-4 h-4" />
+                      {job.salary}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="w-4 h-4" />
-                    {job.type}
+                  <div className="border-t pt-4">
+                    <p className="text-xs text-muted-foreground mb-2">Requirements:</p>
+                    <ul className="text-xs space-y-1">
+                      {job.requirements.map((req) => (
+                        <li key={req} className="flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3 text-primary" />
+                          {req}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="flex items-center gap-2 text-primary font-semibold">
-                    <DollarSign className="w-4 h-4" />
-                    {job.salary}
-                  </div>
-                </div>
-                <div className="border-t pt-4">
-                  <p className="text-xs text-muted-foreground mb-2">Requirements:</p>
-                  <ul className="text-xs space-y-1">
-                    {job.requirements.map((req) => (
-                      <li key={req} className="flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3 text-primary" />
-                        {req}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <Button className="w-full mt-4 btn-primary-glow" onClick={() => document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' })}>
-                  Apply Now
-                </Button>
-              </motion.div>
-            ))}
-          </div>
+                  <Button className="w-full mt-4 btn-primary-glow" onClick={() => document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' })}>
+                    Apply Now
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-background rounded-xl p-12 text-center border">
+              <Briefcase className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">Job listings coming soon. Submit your application below to be considered.</p>
+            </div>
+          )}
         </div>
       </section>
 

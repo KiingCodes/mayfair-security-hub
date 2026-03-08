@@ -24,15 +24,7 @@ const certifications = [
   { name: "SafeContractor", description: "Health & Safety Accredited" },
 ];
 
-const timeline = [
-  { year: "2008", event: "Mayfair Security Services founded" },
-  { year: "2010", event: "Expanded to 100+ security officers" },
-  { year: "2013", event: "Achieved ISO 9001 certification" },
-  { year: "2016", event: "Launched mobile patrol division" },
-  { year: "2019", event: "Introduced live GPS tracking" },
-  { year: "2022", event: "Reached 500+ active clients" },
-  { year: "2024", event: "Expanded to 1,200+ officers nationwide" },
-];
+const timeline: { year: string; event: string }[] = [];
 
 const About = () => {
   return (
@@ -49,8 +41,8 @@ const About = () => {
                 About Mayfair Security Services
               </h1>
               <p className="text-xl text-white/90 mb-6">
-                Think Ahead, Protect Smarter. For over 15 years, we've been the trusted 
-                security partner for businesses, events, and individuals across the nation.
+                Think Ahead, Protect Smarter. We are a trusted 
+                security partner for businesses, events, and individuals.
               </p>
               <p className="text-white/80">
                 Founded on principles of integrity, professionalism, and excellence, 
@@ -139,7 +131,7 @@ const About = () => {
       </section>
 
       {/* Timeline */}
-      <section className="py-20">
+      {timeline.length > 0 && <section className="py-20">
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-12"
@@ -175,7 +167,7 @@ const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Certifications */}
       <section className="py-20 bg-muted">

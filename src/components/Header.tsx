@@ -51,7 +51,7 @@ const Header = () => {
                 Client Portal
               </Button>
             </Link>
-            <a href="tel:+1234567890">
+            <a href="#">
               <Button className="btn-emergency">
                 <Phone className="w-4 h-4 mr-2" />
                 Emergency Line
@@ -94,7 +94,7 @@ const Header = () => {
                     Client Portal
                   </Button>
                 </Link>
-                <a href="tel:+1234567890">
+                <a href="#">
                   <Button className="w-full btn-emergency">
                     <Phone className="w-4 h-4 mr-2" />
                     Emergency Line

@@ -63,21 +63,21 @@ const Footer = () => {
                 <Phone className="w-5 h-5 text-primary mt-1" />
                 <div>
                   <p className="text-white/70">24/7 Hotline</p>
-                  <a href="tel:+1234567890" className="font-semibold hover:text-primary transition-colors">+1 (234) 567-890</a>
+                  <a href="#" className="font-semibold hover:text-primary transition-colors">Your Number Here</a>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-primary mt-1" />
                 <div>
                   <p className="text-white/70">Email Us</p>
-                  <a href="mailto:info@mayfairsecurity.com" className="font-semibold hover:text-primary transition-colors">info@mayfairsecurity.com</a>
+                  <a href="#" className="font-semibold hover:text-primary transition-colors">your@email.com</a>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-1" />
                 <div>
                   <p className="text-white/70">Head Office</p>
-                  <p className="font-semibold">123 Security Blvd, Suite 100</p>
+                  <p className="font-semibold">Your Address Here</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">

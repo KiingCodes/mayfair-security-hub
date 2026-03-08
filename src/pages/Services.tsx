@@ -164,7 +164,7 @@ const Services = () => {
                   Request Free Assessment
                 </Button>
               </Link>
-              <a href="tel:+1234567890">
+              <a href="#">
                 <Button size="lg" variant="outline">
                   <Phone className="mr-2 w-5 h-5" />
                   Call Us Now

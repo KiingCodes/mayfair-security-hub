@@ -21,10 +21,10 @@ const services = [
 ];
 
 const stats = [
-  { value: "500+", label: "Active Clients" },
-  { value: "1,200+", label: "Security Officers" },
+  { value: "—", label: "Active Clients" },
+  { value: "—", label: "Security Officers" },
   { value: "24/7", label: "Emergency Response" },
-  { value: "15+", label: "Years Experience" },
+  { value: "—", label: "Years Experience" },
 ];
 
 const Index = () => {
@@ -44,7 +44,7 @@ const Index = () => {
               transition={{ duration: 0.8 }}
             >
               <span className="inline-block bg-white/20 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                🛡️ Trusted Security Partner Since 2008
+                🛡️ Your Trusted Security Partner
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-white leading-tight mb-6">
                 Professional Security Solutions You Can{" "}
@@ -238,15 +238,15 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-3 gap-4 mt-4">
                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-white">12</p>
+                    <p className="text-2xl font-bold text-white">—</p>
                     <p className="text-xs text-white/70">Active Guards</p>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-white">48</p>
+                    <p className="text-2xl font-bold text-white">—</p>
                     <p className="text-xs text-white/70">Check-ins Today</p>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-primary">0</p>
+                    <p className="text-2xl font-bold text-primary">—</p>
                     <p className="text-xs text-white/70">Incidents</p>
                   </div>
                 </div>
@@ -348,7 +348,7 @@ const Index = () => {
                   <ChevronRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <a href="tel:+1234567890">
+              <a href="#">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-charcoal text-lg">
                   <Phone className="mr-2 w-5 h-5" />
                   Call Now
@@ -388,7 +388,7 @@ const Index = () => {
               <div className="text-center">
                 <MapPin className="w-20 h-20 text-primary mx-auto mb-4" />
                 <p className="text-muted-foreground">Interactive Service Area Map</p>
-                <p className="text-sm text-muted-foreground">50+ Service Locations</p>
+                <p className="text-sm text-muted-foreground">50+ Service Loons</p>
               </div>
             </div>
             <Link to="/contact">

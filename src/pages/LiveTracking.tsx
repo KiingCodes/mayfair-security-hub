@@ -37,13 +37,6 @@ const reportTypes = [
   { name: "Daily Reports", icon: Clock, color: "bg-blue-500" },
 ];
 
-const mockGuards = [
-  { name: "Officer Johnson", status: "On Patrol", zone: "Zone A", lastCheckIn: "5 min ago" },
-  { name: "Officer Smith", status: "At Checkpoint", zone: "Zone B", lastCheckIn: "2 min ago" },
-  { name: "Officer Williams", status: "On Patrol", zone: "Zone C", lastCheckIn: "8 min ago" },
-  { name: "Officer Davis", status: "Break", zone: "Zone A", lastCheckIn: "12 min ago" },
-];
-
 const LiveTracking = () => {
   return (
     <Layout>
@@ -64,7 +57,7 @@ const LiveTracking = () => {
             </h1>
             <p className="text-xl text-white/90">
               Monitor your security team in real-time. Track patrol locations, view check-ins, 
-              and access reports—all from one dashboard.
+              and access reports — all from one dashboard.
             </p>
           </motion.div>
         </div>
@@ -126,19 +119,10 @@ const LiveTracking = () => {
                   </div>
                 </div>
                 <div className="bg-secondary rounded-xl h-80 flex items-center justify-center relative overflow-hidden">
-                  {/* Mock map markers */}
-                  <div className="absolute top-1/4 left-1/4 w-8 h-8 bg-primary rounded-full flex items-center justify-center animate-pulse">
-                    <Users className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                  <div className="absolute top-1/2 right-1/3 w-8 h-8 bg-primary rounded-full flex items-center justify-center animate-pulse" style={{ animationDelay: "0.5s" }}>
-                    <Users className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                  <div className="absolute bottom-1/3 left-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center animate-pulse" style={{ animationDelay: "1s" }}>
-                    <Users className="w-4 h-4 text-primary-foreground" />
-                  </div>
                   <div className="text-center z-10">
                     <MapPin className="w-12 h-12 text-primary mx-auto mb-2" />
                     <p className="text-muted-foreground text-sm">Interactive Map View</p>
+                    <p className="text-muted-foreground text-xs mt-1">Available for clients</p>
                   </div>
                 </div>
               </div>
@@ -147,19 +131,19 @@ const LiveTracking = () => {
               <div className="space-y-4">
                 <div className="bg-muted rounded-xl p-4">
                   <p className="text-sm text-muted-foreground mb-1">Active Guards</p>
-                  <p className="text-3xl font-heading font-bold text-primary">12</p>
+                  <p className="text-3xl font-heading font-bold text-primary">&mdash;</p>
                 </div>
                 <div className="bg-muted rounded-xl p-4">
                   <p className="text-sm text-muted-foreground mb-1">Check-ins Today</p>
-                  <p className="text-3xl font-heading font-bold">48</p>
+                  <p className="text-3xl font-heading font-bold">&mdash;</p>
                 </div>
                 <div className="bg-muted rounded-xl p-4">
                   <p className="text-sm text-muted-foreground mb-1">Incidents</p>
-                  <p className="text-3xl font-heading font-bold text-primary">0</p>
+                  <p className="text-3xl font-heading font-bold text-primary">&mdash;</p>
                 </div>
                 <div className="bg-muted rounded-xl p-4">
                   <p className="text-sm text-muted-foreground mb-1">Coverage</p>
-                  <p className="text-3xl font-heading font-bold">100%</p>
+                  <p className="text-3xl font-heading font-bold">&mdash;</p>
                 </div>
               </div>
             </div>
@@ -167,30 +151,9 @@ const LiveTracking = () => {
             {/* Guard List */}
             <div className="mt-6">
               <h3 className="font-heading font-bold mb-4">Active Security Personnel</h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {mockGuards.map((guard) => (
-                  <div key={guard.name} className="bg-muted rounded-xl p-4">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                        <Shield className="w-5 h-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-sm">{guard.name}</p>
-                        <p className="text-xs text-muted-foreground">{guard.zone}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className={`px-2 py-1 rounded-full ${
-                        guard.status === "On Patrol" ? "bg-primary/20 text-primary" :
-                        guard.status === "At Checkpoint" ? "bg-blue-500/20 text-blue-600" :
-                        "bg-yellow-500/20 text-yellow-600"
-                      }`}>
-                        {guard.status}
-                      </span>
-                      <span className="text-muted-foreground">{guard.lastCheckIn}</span>
-                    </div>
-                  </div>
-                ))}
+              <div className="bg-muted rounded-xl p-8 text-center">
+                <Shield className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground">Guard data available for active clients</p>
               </div>
             </div>
           </motion.div>
