@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import PanicButton from "./PanicButton";
 import AlertHistory from "./AlertHistory";
+import ClientFiles from "./ClientFiles";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
