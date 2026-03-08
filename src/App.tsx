@@ -11,6 +11,7 @@ import Careers from "./pages/Careers";
 import Contact from "./pages/Contact";
 import ClientPortal from "./pages/ClientPortal";
 import LiveTracking from "./pages/LiveTracking";
+import Gallery from "./pages/Gallery";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
