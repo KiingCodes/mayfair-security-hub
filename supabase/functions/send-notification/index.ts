@@ -10,7 +10,7 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const NOTIFICATION_EMAIL = "koketsonare65@outlook.com";
 
 interface NotificationPayload {
-  type: "contact" | "job_application";
+  type: "contact" | "job_application" | "emergency_alert";
   data: Record<string, string>;
 }
 
@@ -51,6 +51,24 @@ Deno.serve(async (req) => {
           <tr><td style="padding:8px;border:1px solid #ddd"><strong>Message</strong></td><td style="padding:8px;border:1px solid #ddd">${data.message || "N/A"}</td></tr>
           ${data.cv_url ? `<tr><td style="padding:8px;border:1px solid #ddd"><strong>CV</strong></td><td style="padding:8px;border:1px solid #ddd">File uploaded: ${data.cv_url}</td></tr>` : ""}
         </table>
+      `;
+    } else if (type === "emergency_alert") {
+      subject = `🚨 EMERGENCY ALERT: ${data.alert_type}`;
+      html = `
+        <div style="background:#dc2626;color:white;padding:20px;border-radius:8px;margin-bottom:20px">
+          <h1 style="margin:0;font-size:24px">🚨 EMERGENCY ALERT</h1>
+          <p style="margin:5px 0 0;font-size:16px">Immediate response required!</p>
+        </div>
+        <table style="border-collapse:collapse;width:100%">
+          <tr><td style="padding:12px;border:1px solid #ddd;background:#fef2f2"><strong>Alert Type</strong></td><td style="padding:12px;border:1px solid #ddd;background:#fef2f2;font-weight:bold;color:#dc2626">${data.alert_type}</td></tr>
+          <tr><td style="padding:12px;border:1px solid #ddd"><strong>Location</strong></td><td style="padding:12px;border:1px solid #ddd">${data.location}</td></tr>
+          <tr><td style="padding:12px;border:1px solid #ddd"><strong>Description</strong></td><td style="padding:12px;border:1px solid #ddd">${data.description}</td></tr>
+          <tr><td style="padding:12px;border:1px solid #ddd"><strong>Client Email</strong></td><td style="padding:12px;border:1px solid #ddd">${data.user_email}</td></tr>
+          <tr><td style="padding:12px;border:1px solid #ddd"><strong>Time</strong></td><td style="padding:12px;border:1px solid #ddd">${data.time}</td></tr>
+        </table>
+        <p style="margin-top:20px;padding:15px;background:#fef2f2;border-left:4px solid #dc2626;border-radius:4px">
+          <strong>Action Required:</strong> Log in to the Admin Dashboard to respond to this alert immediately.
+        </p>
       `;
     } else {
       return new Response(JSON.stringify({ error: "Invalid type" }), {
