@@ -143,48 +143,55 @@ const Careers = () => {
             <p className="text-muted-foreground mt-2">Find your next career opportunity</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {jobs.map((job, index) => (
-              <motion.div
-                key={job.title}
-                className="bg-background rounded-xl p-6 border"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                viewport={{ once: true }}
-              >
-                <h3 className="font-heading font-bold text-lg mb-4">{job.title}</h3>
-                <div className="space-y-2 mb-4 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin className="w-4 h-4" />
-                    {job.location}
+          {jobs.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {jobs.map((job, index) => (
+                <motion.div
+                  key={job.title}
+                  className="bg-background rounded-xl p-6 border"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  viewport={{ once: true }}
+                >
+                  <h3 className="font-heading font-bold text-lg mb-4">{job.title}</h3>
+                  <div className="space-y-2 mb-4 text-sm">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <MapPin className="w-4 h-4" />
+                      {job.location}
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Clock className="w-4 h-4" />
+                      {job.type}
+                    </div>
+                    <div className="flex items-center gap-2 text-primary font-semibold">
+                      <DollarSign className="w-4 h-4" />
+                      {job.salary}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="w-4 h-4" />
-                    {job.type}
+                  <div className="border-t pt-4">
+                    <p className="text-xs text-muted-foreground mb-2">Requirements:</p>
+                    <ul className="text-xs space-y-1">
+                      {job.requirements.map((req) => (
+                        <li key={req} className="flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3 text-primary" />
+                          {req}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="flex items-center gap-2 text-primary font-semibold">
-                    <DollarSign className="w-4 h-4" />
-                    {job.salary}
-                  </div>
-                </div>
-                <div className="border-t pt-4">
-                  <p className="text-xs text-muted-foreground mb-2">Requirements:</p>
-                  <ul className="text-xs space-y-1">
-                    {job.requirements.map((req) => (
-                      <li key={req} className="flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3 text-primary" />
-                        {req}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <Button className="w-full mt-4 btn-primary-glow" onClick={() => document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' })}>
-                  Apply Now
-                </Button>
-              </motion.div>
-            ))}
-          </div>
+                  <Button className="w-full mt-4 btn-primary-glow" onClick={() => document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' })}>
+                    Apply Now
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-background rounded-xl p-12 text-center border">
+              <Briefcase className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">Job listings coming soon. Submit your application below to be considered.</p>
+            </div>
+          )}
         </div>
       </section>
 
