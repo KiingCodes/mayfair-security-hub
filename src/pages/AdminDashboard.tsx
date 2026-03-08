@@ -24,6 +24,7 @@ import AdminFiles from "@/components/admin/AdminFiles";
 import AdminInvoices from "@/components/admin/AdminInvoices";
 import AdminContracts from "@/components/admin/AdminContracts";
 import AdminGuardRequests from "@/components/admin/AdminGuardRequests";
+import AdminHelpDesk from "@/components/admin/AdminHelpDesk";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
@@ -384,7 +385,7 @@ const AdminDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="bg-card border rounded-2xl p-1.5 mb-8 shadow-sm">
-            <TabsList className="grid w-full grid-cols-4 md:grid-cols-11 gap-1 bg-transparent h-auto">
+            <TabsList className="grid w-full grid-cols-4 md:grid-cols-12 gap-1 bg-transparent h-auto">
               {[
                 { value: "overview", label: "Overview", icon: LayoutDashboard },
                 { value: "alerts", label: "Alerts", icon: ShieldAlert, badge: stats.alerts },
@@ -397,6 +398,7 @@ const AdminDashboard = () => {
                 { value: "invoices", label: "Invoices", icon: FileText },
                 { value: "contracts", label: "Contracts", icon: Download },
                 { value: "guard-requests", label: "Guards", icon: Users },
+                { value: "helpdesk", label: "Help Desk", icon: Bell },
               ].map((tab) => (
                 <TabsTrigger
                   key={tab.value}
@@ -913,6 +915,11 @@ const AdminDashboard = () => {
           {/* Guard Requests */}
           <TabsContent value="guard-requests">
             <AdminGuardRequests clients={clients} />
+          </TabsContent>
+
+          {/* Help Desk */}
+          <TabsContent value="helpdesk">
+            <AdminHelpDesk />
           </TabsContent>
         </Tabs>
       </div>

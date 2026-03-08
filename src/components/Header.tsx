@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Shield, LayoutDashboard, Settings } from "lucide-react";
+import { Menu, X, Phone, Shield, LayoutDashboard, Settings, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
@@ -14,6 +14,7 @@ const navLinks = [
   { name: "Live Tracking", path: "/tracking" },
   { name: "Careers", path: "/careers" },
   { name: "Contact", path: "/contact" },
+  { name: "Help Desk", path: "/help-desk" },
 ];
 
 const Header = () => {
