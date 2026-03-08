@@ -345,26 +345,28 @@ const Index = () => {
               <img src={bgCta} alt="" className="w-full h-full object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-[hsl(var(--charcoal))/0.8]" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
-              Ready to Secure Your Property?
-            </h2>
-            <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-              Get started in minutes. Request a free quote or call our 24/7 hotline 
-              for immediate assistance.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/contact">
-                <Button size="lg" className="btn-emergency text-lg">
-                  Get Free Quote
-                  <ChevronRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <a href="#">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-charcoal text-lg">
-                  <Phone className="mr-2 w-5 h-5" />
-                  Call Now
-                </Button>
-              </a>
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
+                Ready to Secure Your Property?
+              </h2>
+              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+                Get started in minutes. Request a free quote or call our 24/7 hotline 
+                for immediate assistance.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Link to="/contact">
+                  <Button size="lg" className="btn-emergency text-lg">
+                    Get Free Quote
+                    <ChevronRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
+                <a href="#">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-charcoal text-lg">
+                    <Phone className="mr-2 w-5 h-5" />
+                    Call Now
+                  </Button>
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>
