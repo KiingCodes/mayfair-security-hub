@@ -107,7 +107,27 @@ const AdminInvoices = ({ clients }: AdminInvoicesProps) => {
     } else {
       const { error } = await supabase.from("invoices").insert(payload);
       if (error) toast({ title: "Error", description: error.message, variant: "destructive" });
-      else toast({ title: "Created", description: "Invoice created." });
+      else {
+        toast({ title: "Created", description: "Invoice created." });
+        // Send email notification to client
+        const { data: userData } = await supabase.rpc("get_user_email", { uid: form.client_id });
+        if (userData) {
+          supabase.functions.invoke("send-client-email", {
+            body: {
+              type: "invoice_created",
+              to: [userData],
+              data: {
+                invoice_number: form.invoice_number,
+                amount: parseFloat(form.amount).toLocaleString("en-ZA", { minimumFractionDigits: 2 }),
+                due_date: form.due_date ? new Date(form.due_date).toLocaleDateString() : null,
+                description: form.description || null,
+                status: form.status,
+                portal_url: `${window.location.origin}/portal`,
+              },
+            },
+          }).catch(() => {});
+        }
+      }
     }
 
     setDialog(false);
