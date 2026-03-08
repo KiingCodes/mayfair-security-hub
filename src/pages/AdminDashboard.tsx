@@ -85,6 +85,36 @@ const AdminDashboard = () => {
   const [respondingId, setRespondingId] = useState<string | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
 
+  // Date range filter state
+  const [dateFrom, setDateFrom] = useState<Date | undefined>(undefined);
+  const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
+
+  const filterByDate = (rows: any[], dateField = "created_at") => {
+    return rows.filter(row => {
+      const d = new Date(row[dateField]);
+      if (dateFrom && d < new Date(dateFrom.setHours(0, 0, 0, 0))) return false;
+      if (dateTo) {
+        const end = new Date(dateTo);
+        end.setHours(23, 59, 59, 999);
+        if (d > end) return false;
+      }
+      return true;
+    });
+  };
+
+  // Reset date filter when switching tabs
+  useEffect(() => {
+    setDateFrom(undefined);
+    setDateTo(undefined);
+  }, [activeTab]);
+
+  // Filtered data
+  const filteredStaff = useMemo(() => filterByDate(staffProfiles), [staffProfiles, dateFrom, dateTo]);
+  const filteredClients = useMemo(() => filterByDate(clients), [clients, dateFrom, dateTo]);
+  const filteredIncidents = useMemo(() => filterByDate(incidents), [incidents, dateFrom, dateTo]);
+  const filteredCancellations = useMemo(() => filterByDate(cancellations), [cancellations, dateFrom, dateTo]);
+  const filteredAlerts = useMemo(() => filterByDate(alerts), [alerts, dateFrom, dateTo]);
+
   // Stats
   const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0, alerts: 0 });
 
