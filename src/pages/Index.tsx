@@ -336,11 +336,15 @@ const Index = () => {
       <section className="py-20 bg-muted">
         <div className="container mx-auto px-4">
           <motion.div
-            className="bg-gradient-to-r from-charcoal to-charcoal/90 rounded-3xl p-8 md:p-12 text-center"
+            className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
+            <div className="absolute inset-0">
+              <img src={bgCta} alt="" className="w-full h-full object-cover" loading="lazy" />
+              <div className="absolute inset-0 bg-[hsl(var(--charcoal))/0.8]" />
+            </div>
             <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">
               Ready to Secure Your Property?
             </h2>
