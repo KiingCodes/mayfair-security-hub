@@ -77,6 +77,11 @@ const Gallery = () => {
 
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">Loading gallery...</div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-16">
+              <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
+              <p className="text-muted-foreground">No gallery images yet. Check back soon!</p>
+            </div>
           ) : (
             <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <AnimatePresence mode="popLayout">
