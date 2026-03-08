@@ -39,8 +39,45 @@ const NotificationBell = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
+  const [permissionGranted, setPermissionGranted] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
+
+  // Request browser notification permission on mount
+  useEffect(() => {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        setPermissionGranted(true);
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((perm) => {
+          setPermissionGranted(perm === "granted");
+        });
+      }
+    }
+  }, []);
+
+  const showDesktopNotification = (title: string, body: string, link?: string | null) => {
+    if (!permissionGranted || !("Notification" in window)) return;
+    try {
+      const n = new window.Notification(title, {
+        body,
+        icon: "/favicon.ico",
+        badge: "/favicon.ico",
+        tag: "mayfair-notification",
+      } as NotificationOptions);
+      if (link) {
+        n.onclick = () => {
+          window.focus();
+          window.location.href = link;
+          n.close();
+        };
+      }
+      // Auto close after 8s
+      setTimeout(() => n.close(), 8000);
+    } catch {
+      // Service worker context or unsupported
+    }
+  };
 
   const fetchNotifications = async () => {
     if (!user) return;
@@ -71,7 +108,10 @@ const NotificationBell = () => {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          setNotifications((prev) => [payload.new as Notification, ...prev]);
+          const newNotif = payload.new as Notification;
+          setNotifications((prev) => [newNotif, ...prev]);
+          // Show browser desktop notification
+          showDesktopNotification(newNotif.title, newNotif.message, newNotif.link);
         }
       )
       .subscribe();
