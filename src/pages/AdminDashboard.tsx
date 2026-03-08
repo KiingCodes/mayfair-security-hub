@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
   LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle,
-  Bell, ShieldAlert, CheckCircle2
+  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import Layout from "@/components/Layout";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
@@ -26,6 +27,12 @@ const GALLERY_CATEGORIES = [
   { value: "cctv", label: "CCTV & Alarms" },
   { value: "fencing", label: "Electric Fencing" },
 ];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4 },
+};
 
 const AdminDashboard = () => {
   const { signOut } = useAuth();
@@ -172,7 +179,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Staff management
   const deleteStaffProfile = async (id: string) => {
     const { error } = await supabase.from("staff_profiles").delete().eq("id", id);
     if (error) {
@@ -218,103 +224,156 @@ const AdminDashboard = () => {
     }
   };
 
+  const statCards = [
+    { label: "Active Alerts", value: stats.alerts, icon: ShieldAlert, gradient: "from-destructive to-destructive/80", urgent: stats.alerts > 0 },
+    { label: "Gallery Items", value: stats.gallery, icon: Image, gradient: "from-primary to-primary/80" },
+    { label: "Staff Members", value: stats.staff, icon: UserCheck, gradient: "from-primary to-primary/80" },
+    { label: "Clients", value: stats.clients, icon: Users, gradient: "from-primary to-primary/80" },
+    { label: "Open Incidents", value: stats.incidents, icon: AlertTriangle, gradient: "from-accent to-accent/80", urgent: stats.incidents > 0 },
+    { label: "Pending Cancels", value: stats.cancellations, icon: XCircle, gradient: "from-accent to-accent/80", urgent: stats.cancellations > 0 },
+  ];
+
   return (
     <Layout>
       {/* Header */}
-      <section className="py-6 gradient-hero">
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <LayoutDashboard className="w-8 h-8 text-white" />
-            <h1 className="text-2xl font-heading font-bold text-white">Admin Dashboard</h1>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--charcoal))] via-[hsl(var(--green-dark))] to-[hsl(var(--charcoal))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,hsl(var(--primary)/0.2),transparent_60%)]" />
+        <div className="relative container mx-auto px-4 py-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-primary-foreground/10 backdrop-blur-sm flex items-center justify-center border border-primary-foreground/20">
+                <LayoutDashboard className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-heading font-black text-primary-foreground tracking-tight">
+                  Admin Dashboard
+                </h1>
+                <p className="text-sm text-primary-foreground/70 flex items-center gap-1.5 mt-0.5">
+                  <Activity className="w-3.5 h-3.5" />
+                  System Overview & Management
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link to="/portal">
+                <Button variant="ghost" className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10">
+                  <ArrowLeft className="mr-2 w-4 h-4" /> Portal
+                </Button>
+              </Link>
+              <Button 
+                variant="outline" 
+                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                onClick={signOut}
+              >
+                <LogOut className="mr-2 w-4 h-4" /> Sign Out
+              </Button>
+            </div>
           </div>
-          <Button variant="outline" className="border-white text-white hover:bg-white hover:text-foreground" onClick={signOut}>
-            <LogOut className="mr-2 w-4 h-4" /> Sign Out
-          </Button>
         </div>
       </section>
 
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-7 mb-8">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="alerts" className="relative">
-              🚨 Alerts
-              {stats.alerts > 0 && (
-                <Badge variant="destructive" className="ml-1 text-xs px-1.5 py-0 animate-pulse">{stats.alerts}</Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="gallery">Gallery</TabsTrigger>
-            <TabsTrigger value="staff">Staff</TabsTrigger>
-            <TabsTrigger value="clients">Clients</TabsTrigger>
-            <TabsTrigger value="incidents">Incidents</TabsTrigger>
-            <TabsTrigger value="cancellations">
-              Cancellations
-              {stats.cancellations > 0 && (
-                <Badge variant="destructive" className="ml-1 text-xs px-1.5 py-0">{stats.cancellations}</Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
+          <div className="bg-card border rounded-2xl p-1.5 mb-8 shadow-sm">
+            <TabsList className="grid w-full grid-cols-3 md:grid-cols-7 gap-1 bg-transparent h-auto">
+              {[
+                { value: "overview", label: "Overview", icon: LayoutDashboard },
+                { value: "alerts", label: "Alerts", icon: ShieldAlert, badge: stats.alerts },
+                { value: "gallery", label: "Gallery", icon: Image },
+                { value: "staff", label: "Staff", icon: UserCheck },
+                { value: "clients", label: "Clients", icon: Users },
+                { value: "incidents", label: "Incidents", icon: AlertTriangle, badge: stats.incidents },
+                { value: "cancellations", label: "Cancels", icon: XCircle, badge: stats.cancellations },
+              ].map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="relative flex items-center gap-1.5 rounded-xl px-3 py-2.5 text-xs md:text-sm font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
+                >
+                  <tab.icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  {tab.badge && tab.badge > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center animate-pulse">
+                      {tab.badge}
+                    </span>
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
 
           {/* Overview */}
           <TabsContent value="overview">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
-              {[
-                { label: "Active Alerts", value: stats.alerts, icon: ShieldAlert, color: "text-destructive" },
-                { label: "Gallery Items", value: stats.gallery, icon: Image, color: "text-primary" },
-                { label: "Staff Members", value: stats.staff, icon: UserCheck, color: "text-primary" },
-                { label: "Clients", value: stats.clients, icon: Users, color: "text-primary" },
-                { label: "Open Incidents", value: stats.incidents, icon: AlertTriangle, color: "text-accent" },
-                { label: "Pending Cancellations", value: stats.cancellations, icon: XCircle, color: "text-accent" },
-              ].map((stat) => (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+              {statCards.map((stat, i) => (
                 <motion.div
                   key={stat.label}
-                  className="bg-card border rounded-xl p-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  className={`relative overflow-hidden rounded-2xl p-5 text-primary-foreground bg-gradient-to-br ${stat.gradient} shadow-md hover:shadow-lg transition-shadow ${stat.urgent ? 'ring-2 ring-destructive/50 ring-offset-2 ring-offset-background' : ''}`}
+                  {...fadeUp}
+                  transition={{ delay: i * 0.05 }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-muted-foreground">{stat.label}</span>
-                    <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                  <div className="absolute top-3 right-3 opacity-20">
+                    <stat.icon className="w-10 h-10" />
                   </div>
-                  <p className="text-3xl font-heading font-bold">{stat.value}</p>
+                  <p className="text-xs font-medium opacity-90 mb-1">{stat.label}</p>
+                  <p className="text-3xl font-heading font-black">{stat.value}</p>
                 </motion.div>
               ))}
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6">
-              <div className="bg-card border rounded-xl p-6">
-                <h3 className="font-heading font-bold mb-4">Recent Incidents</h3>
-                {incidents.slice(0, 5).map((inc) => (
-                  <div key={inc.id} className="flex items-center justify-between py-3 border-b last:border-0">
-                    <div>
-                      <p className="font-medium text-sm">{inc.incident_type}</p>
-                      <p className="text-xs text-muted-foreground">{inc.location}</p>
-                    </div>
-                    <Badge variant={inc.status === "open" ? "destructive" : "secondary"}>{inc.status}</Badge>
-                  </div>
-                ))}
-                {incidents.length === 0 && <p className="text-muted-foreground text-sm">No incidents reported.</p>}
-              </div>
-
-              <div className="bg-card border rounded-xl p-6">
-                <h3 className="font-heading font-bold mb-4">Recent Staff</h3>
-                {staffProfiles.slice(0, 5).map((s) => (
-                  <div key={s.id} className="flex items-center gap-3 py-3 border-b last:border-0">
-                    {s.photo_url ? (
-                      <img src={s.photo_url} alt={s.full_name} className="w-10 h-10 rounded-full object-cover" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                        <UserCheck className="w-5 h-5 text-muted-foreground" />
+              <motion.div className="bg-card border rounded-2xl shadow-sm overflow-hidden" {...fadeUp}>
+                <div className="px-6 py-4 border-b bg-muted/50">
+                  <h3 className="font-heading font-bold flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-accent" />
+                    Recent Incidents
+                  </h3>
+                </div>
+                <div className="divide-y">
+                  {incidents.slice(0, 5).map((inc) => (
+                    <div key={inc.id} className="flex items-center justify-between px-6 py-3.5 hover:bg-muted/30 transition-colors">
+                      <div>
+                        <p className="font-semibold text-sm">{inc.incident_type}</p>
+                        <p className="text-xs text-muted-foreground">{inc.location}</p>
                       </div>
-                    )}
-                    <div>
-                      <p className="font-medium text-sm">{s.full_name}</p>
-                      <p className="text-xs text-muted-foreground capitalize">{s.position}</p>
+                      <Badge variant={inc.status === "open" ? "destructive" : "secondary"} className="text-xs">{inc.status}</Badge>
                     </div>
-                  </div>
-                ))}
-                {staffProfiles.length === 0 && <p className="text-muted-foreground text-sm">No staff profiles yet.</p>}
-              </div>
+                  ))}
+                  {incidents.length === 0 && (
+                    <p className="text-muted-foreground text-sm text-center py-8">No incidents reported.</p>
+                  )}
+                </div>
+              </motion.div>
+
+              <motion.div className="bg-card border rounded-2xl shadow-sm overflow-hidden" {...fadeUp} transition={{ delay: 0.1 }}>
+                <div className="px-6 py-4 border-b bg-muted/50">
+                  <h3 className="font-heading font-bold flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-primary" />
+                    Recent Staff
+                  </h3>
+                </div>
+                <div className="divide-y">
+                  {staffProfiles.slice(0, 5).map((s) => (
+                    <div key={s.id} className="flex items-center gap-3 px-6 py-3.5 hover:bg-muted/30 transition-colors">
+                      {s.photo_url ? (
+                        <img src={s.photo_url} alt={s.full_name} className="w-10 h-10 rounded-full object-cover ring-2 ring-border" />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                          <UserCheck className="w-5 h-5 text-secondary-foreground" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-semibold text-sm">{s.full_name}</p>
+                        <p className="text-xs text-muted-foreground capitalize">{s.position}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {staffProfiles.length === 0 && (
+                    <p className="text-muted-foreground text-sm text-center py-8">No staff profiles yet.</p>
+                  )}
+                </div>
+              </motion.div>
             </div>
           </TabsContent>
 
@@ -323,32 +382,37 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
                 <ShieldAlert className="w-6 h-6 text-destructive" /> Emergency Alerts
-                <span className="flex items-center gap-1 text-xs text-muted-foreground ml-2">
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground ml-2 bg-muted px-2.5 py-1 rounded-full">
                   <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" /> Real-time
                 </span>
               </h2>
             </div>
 
             {alerts.filter(a => a.status === "active").length > 0 && (
-              <div className="bg-destructive/10 border-2 border-destructive rounded-xl p-4 mb-6">
+              <motion.div 
+                className="bg-destructive/10 border-2 border-destructive rounded-2xl p-5 mb-6"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
                 <p className="font-bold text-destructive flex items-center gap-2">
                   <Bell className="w-5 h-5 animate-bounce" />
                   {alerts.filter(a => a.status === "active").length} active alert(s) require immediate attention!
                 </p>
-              </div>
+              </motion.div>
             )}
 
             <div className="space-y-4">
               {alerts.map((alert: any) => (
-                <div
+                <motion.div
                   key={alert.id}
-                  className={`bg-card border rounded-xl p-5 ${
-                    alert.status === "active" ? "border-destructive shadow-lg" : ""
+                  className={`bg-card border-2 rounded-2xl p-6 transition-all ${
+                    alert.status === "active" ? "border-destructive shadow-lg shadow-destructive/10" : "border-border"
                   }`}
+                  {...fadeUp}
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="font-bold capitalize text-base">
                           {alert.alert_type.replace("_", " ")}
                         </span>
@@ -358,24 +422,24 @@ const AdminDashboard = () => {
                         }>
                           {alert.status}
                         </Badge>
-                        <Badge variant="outline">{alert.severity}</Badge>
+                        <Badge variant="outline" className="text-xs">{alert.severity}</Badge>
                       </div>
                       {alert.location && <p className="text-sm text-muted-foreground">📍 {alert.location}</p>}
-                      {alert.description && <p className="text-sm mt-1">{alert.description}</p>}
+                      {alert.description && <p className="text-sm mt-1.5">{alert.description}</p>}
                       <p className="text-xs text-muted-foreground mt-2">
                         {new Date(alert.created_at).toLocaleString()}
                       </p>
                       {alert.admin_notes && (
-                        <p className="text-sm mt-2 text-primary bg-primary/5 rounded p-2">
+                        <div className="text-sm mt-3 bg-primary/5 border border-primary/10 rounded-xl p-3">
                           <strong>Notes:</strong> {alert.admin_notes}
-                        </p>
+                        </div>
                       )}
                     </div>
 
                     <div className="flex flex-col gap-2 shrink-0">
                       {alert.status === "active" && (
                         <>
-                          <Button size="sm" onClick={() => updateAlertStatus(alert.id, "responding")}>
+                          <Button size="sm" className="shadow-sm" onClick={() => updateAlertStatus(alert.id, "responding")}>
                             <Bell className="w-4 h-4 mr-1" /> Responding
                           </Button>
                           <Button size="sm" variant="outline" onClick={() => setRespondingId(alert.id)}>
@@ -392,7 +456,7 @@ const AdminDashboard = () => {
                   </div>
 
                   {respondingId === alert.id && (
-                    <div className="mt-4 flex gap-2 items-end">
+                    <div className="mt-4 flex gap-2 items-end border-t pt-4">
                       <div className="flex-1">
                         <Label className="text-xs">Resolution notes</Label>
                         <Input
@@ -409,12 +473,14 @@ const AdminDashboard = () => {
                       </Button>
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
               {alerts.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
-                  <ShieldAlert className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>No emergency alerts. All clear!</p>
+                <div className="text-center py-16 text-muted-foreground">
+                  <div className="w-16 h-16 rounded-full bg-secondary mx-auto mb-4 flex items-center justify-center">
+                    <ShieldAlert className="w-8 h-8 opacity-50" />
+                  </div>
+                  <p className="font-medium">No emergency alerts. All clear!</p>
                 </div>
               )}
             </div>
@@ -423,36 +489,46 @@ const AdminDashboard = () => {
           {/* Gallery Management */}
           <TabsContent value="gallery">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-heading font-bold">Gallery Management</h2>
-              <Button onClick={() => openGalleryDialog()} className="btn-primary-glow">
+              <h2 className="text-xl font-heading font-bold flex items-center gap-2">
+                <Image className="w-5 h-5 text-primary" /> Gallery Management
+              </h2>
+              <Button onClick={() => openGalleryDialog()} className="bg-primary hover:bg-primary/90 shadow-md">
                 <Plus className="w-4 h-4 mr-2" /> Add Image
               </Button>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {galleryItems.map((item) => (
-                <div key={item.id} className="bg-card border rounded-xl overflow-hidden group">
+              {galleryItems.map((item, i) => (
+                <motion.div 
+                  key={item.id} 
+                  className="bg-card border rounded-2xl overflow-hidden group shadow-sm hover:shadow-md transition-all"
+                  {...fadeUp}
+                  transition={{ delay: i * 0.05 }}
+                >
                   <div className="aspect-video relative">
                     <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                      <Button size="sm" variant="secondary" onClick={() => openGalleryDialog(item)}>
+                      <Button size="sm" variant="secondary" className="shadow-md" onClick={() => openGalleryDialog(item)}>
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button size="sm" variant="destructive" onClick={() => deleteGalleryItem(item.id)}>
+                      <Button size="sm" variant="destructive" className="shadow-md" onClick={() => deleteGalleryItem(item.id)}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
                   <div className="p-4">
                     <h4 className="font-heading font-bold text-sm">{item.title}</h4>
-                    <Badge variant="outline" className="mt-1 text-xs">{item.category}</Badge>
+                    <Badge variant="outline" className="mt-1.5 text-xs capitalize">{item.category}</Badge>
                   </div>
-                </div>
+                </motion.div>
               ))}
               {galleryItems.length === 0 && (
-                <div className="col-span-full text-center py-12 text-muted-foreground">
-                  <Image className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>No gallery items yet. Click "Add Image" to get started.</p>
+                <div className="col-span-full text-center py-16 text-muted-foreground">
+                  <div className="w-16 h-16 rounded-full bg-secondary mx-auto mb-4 flex items-center justify-center">
+                    <Image className="w-8 h-8 opacity-50" />
+                  </div>
+                  <p className="font-medium">No gallery items yet.</p>
+                  <p className="text-sm mt-1">Click "Add Image" to get started.</p>
                 </div>
               )}
             </div>
@@ -460,11 +536,13 @@ const AdminDashboard = () => {
 
           {/* Staff Management */}
           <TabsContent value="staff">
-            <h2 className="text-xl font-heading font-bold mb-6">Staff Management</h2>
-            <div className="bg-card border rounded-xl overflow-hidden">
+            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
+              <UserCheck className="w-5 h-5 text-primary" /> Staff Management
+            </h2>
+            <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="bg-muted/50">
                     <TableHead>Name</TableHead>
                     <TableHead>Position</TableHead>
                     <TableHead>PSIRA</TableHead>
@@ -475,27 +553,27 @@ const AdminDashboard = () => {
                 </TableHeader>
                 <TableBody>
                   {staffProfiles.map((s) => (
-                    <TableRow key={s.id}>
+                    <TableRow key={s.id} className="hover:bg-muted/30">
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
                           {s.photo_url ? (
-                            <img src={s.photo_url} alt={s.full_name} className="w-8 h-8 rounded-full object-cover" />
+                            <img src={s.photo_url} alt={s.full_name} className="w-9 h-9 rounded-full object-cover ring-2 ring-border" />
                           ) : (
-                            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                              <UserCheck className="w-4 h-4 text-muted-foreground" />
+                            <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
+                              <UserCheck className="w-4 h-4 text-secondary-foreground" />
                             </div>
                           )}
                           {s.full_name}
                         </div>
                       </TableCell>
                       <TableCell className="capitalize">{s.position}</TableCell>
-                      <TableCell>{s.psira_number || "—"}</TableCell>
+                      <TableCell className="font-mono text-xs">{s.psira_number || "—"}</TableCell>
                       <TableCell>{s.phone || "—"}</TableCell>
                       <TableCell>
                         <Badge variant={s.status === "active" ? "default" : "secondary"}>{s.status}</Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" variant="destructive" onClick={() => deleteStaffProfile(s.id)}>
+                        <Button size="sm" variant="destructive" className="shadow-sm" onClick={() => deleteStaffProfile(s.id)}>
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </TableCell>
@@ -503,8 +581,9 @@ const AdminDashboard = () => {
                   ))}
                   {staffProfiles.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                        No staff profiles yet. Staff members will appear here once they create their profiles.
+                      <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                        <UserCheck className="w-10 h-10 mx-auto mb-2 opacity-30" />
+                        No staff profiles yet.
                       </TableCell>
                     </TableRow>
                   )}
@@ -515,11 +594,13 @@ const AdminDashboard = () => {
 
           {/* Clients Management */}
           <TabsContent value="clients">
-            <h2 className="text-xl font-heading font-bold mb-6">Client Management</h2>
-            <div className="bg-card border rounded-xl overflow-hidden">
+            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
+              <Users className="w-5 h-5 text-primary" /> Client Management
+            </h2>
+            <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="bg-muted/50">
                     <TableHead>Company</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Address</TableHead>
@@ -528,16 +609,17 @@ const AdminDashboard = () => {
                 </TableHeader>
                 <TableBody>
                   {clients.map((c) => (
-                    <TableRow key={c.id}>
-                      <TableCell className="font-medium">{c.company_name || "—"}</TableCell>
+                    <TableRow key={c.id} className="hover:bg-muted/30">
+                      <TableCell className="font-semibold">{c.company_name || "—"}</TableCell>
                       <TableCell>{c.phone || "—"}</TableCell>
                       <TableCell>{c.address || "—"}</TableCell>
-                      <TableCell>{new Date(c.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-muted-foreground text-sm">{new Date(c.created_at).toLocaleDateString()}</TableCell>
                     </TableRow>
                   ))}
                   {clients.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                        <Users className="w-10 h-10 mx-auto mb-2 opacity-30" />
                         No clients registered yet.
                       </TableCell>
                     </TableRow>
@@ -549,11 +631,13 @@ const AdminDashboard = () => {
 
           {/* Incidents */}
           <TabsContent value="incidents">
-            <h2 className="text-xl font-heading font-bold mb-6">Incident Reports</h2>
-            <div className="bg-card border rounded-xl overflow-hidden">
+            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-accent" /> Incident Reports
+            </h2>
+            <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="bg-muted/50">
                     <TableHead>Type</TableHead>
                     <TableHead>Location</TableHead>
                     <TableHead>Severity</TableHead>
@@ -564,8 +648,8 @@ const AdminDashboard = () => {
                 </TableHeader>
                 <TableBody>
                   {incidents.map((inc) => (
-                    <TableRow key={inc.id}>
-                      <TableCell className="font-medium">{inc.incident_type}</TableCell>
+                    <TableRow key={inc.id} className="hover:bg-muted/30">
+                      <TableCell className="font-semibold">{inc.incident_type}</TableCell>
                       <TableCell>{inc.location}</TableCell>
                       <TableCell>
                         <Badge variant={inc.severity === "high" ? "destructive" : inc.severity === "medium" ? "default" : "secondary"}>
@@ -579,7 +663,7 @@ const AdminDashboard = () => {
                       <TableCell className="text-right">
                         {inc.status === "open" && (
                           <Button size="sm" variant="outline" onClick={() => updateIncidentStatus(inc.id, "resolved")}>
-                            Resolve
+                            <CheckCircle className="w-4 h-4 mr-1" /> Resolve
                           </Button>
                         )}
                       </TableCell>
@@ -587,7 +671,8 @@ const AdminDashboard = () => {
                   ))}
                   {incidents.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
+                        <AlertTriangle className="w-10 h-10 mx-auto mb-2 opacity-30" />
                         No incidents reported.
                       </TableCell>
                     </TableRow>
@@ -599,11 +684,13 @@ const AdminDashboard = () => {
 
           {/* Cancellations */}
           <TabsContent value="cancellations">
-            <h2 className="text-xl font-heading font-bold mb-6">Contract Cancellation Requests</h2>
-            <div className="bg-card border rounded-xl overflow-hidden">
+            <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
+              <XCircle className="w-5 h-5 text-accent" /> Contract Cancellation Requests
+            </h2>
+            <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="bg-muted/50">
                     <TableHead>Reason</TableHead>
                     <TableHead>Submitted</TableHead>
                     <TableHead>Status</TableHead>
@@ -612,9 +699,9 @@ const AdminDashboard = () => {
                 </TableHeader>
                 <TableBody>
                   {cancellations.map((c: any) => (
-                    <TableRow key={c.id}>
+                    <TableRow key={c.id} className="hover:bg-muted/30">
                       <TableCell className="font-medium max-w-xs truncate">{c.reason}</TableCell>
-                      <TableCell>{new Date(c.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-muted-foreground text-sm">{new Date(c.created_at).toLocaleDateString()}</TableCell>
                       <TableCell>
                         <Badge variant={c.status === "pending" ? "default" : c.status === "approved" ? "secondary" : "destructive"}>
                           {c.status}
@@ -636,7 +723,8 @@ const AdminDashboard = () => {
                   ))}
                   {cancellations.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                        <XCircle className="w-10 h-10 mx-auto mb-2 opacity-30" />
                         No cancellation requests.
                       </TableCell>
                     </TableRow>
@@ -652,7 +740,7 @@ const AdminDashboard = () => {
       <Dialog open={galleryDialog} onOpenChange={setGalleryDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingGallery ? "Edit Gallery Item" : "Add Gallery Item"}</DialogTitle>
+            <DialogTitle className="font-heading">{editingGallery ? "Edit Gallery Item" : "Add Gallery Item"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -688,10 +776,10 @@ const AdminDashboard = () => {
               <Label>Image</Label>
               <Input type="file" accept="image/*" onChange={(e) => setGalleryFile(e.target.files?.[0] || null)} />
               {editingGallery?.image_url && !galleryFile && (
-                <img src={editingGallery.image_url} alt="Current" className="mt-2 h-24 rounded-lg object-cover" />
+                <img src={editingGallery.image_url} alt="Current" className="mt-2 h-24 rounded-xl object-cover" />
               )}
             </div>
-            <Button onClick={handleGallerySave} className="w-full btn-primary-glow" disabled={uploading || !galleryForm.title}>
+            <Button onClick={handleGallerySave} className="w-full bg-primary hover:bg-primary/90 shadow-md" disabled={uploading || !galleryForm.title}>
               <Save className="w-4 h-4 mr-2" />
               {uploading ? "Uploading..." : editingGallery ? "Update" : "Add"}
             </Button>
