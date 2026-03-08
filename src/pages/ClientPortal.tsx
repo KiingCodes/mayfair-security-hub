@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Shield, Lock, Eye, FileText, Users, Download,
-  ChevronRight, LogOut, LayoutDashboard
+  ChevronRight, LogOut, LayoutDashboard, Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
