@@ -694,9 +694,14 @@ const AdminDashboard = () => {
                         <Badge variant={s.status === "active" ? "default" : "secondary"}>{s.status}</Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" variant="destructive" className="shadow-sm" onClick={() => deleteStaffProfile(s.id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button size="sm" variant="outline" className="shadow-sm" onClick={() => { setResetTarget(s); setResetResult(null); setResetDialog(true); }}>
+                            <KeyRound className="w-4 h-4" />
+                          </Button>
+                          <Button size="sm" variant="destructive" className="shadow-sm" onClick={() => deleteStaffProfile(s.id)}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
