@@ -195,10 +195,10 @@ const Services = () => {
                   Request Free Assessment
                 </Button>
               </Link>
-              <a href="#">
+              <a href="tel:+27689213188">
                 <Button size="lg" variant="outline">
                   <Phone className="mr-2 w-5 h-5" />
-                  Call Us Now
+                  Call 068 921 3188
                 </Button>
               </a>
             </div>
