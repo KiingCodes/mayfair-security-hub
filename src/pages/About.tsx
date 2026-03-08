@@ -24,15 +24,7 @@ const certifications = [
   { name: "SafeContractor", description: "Health & Safety Accredited" },
 ];
 
-const timeline = [
-  { year: "2008", event: "Mayfair Security Services founded" },
-  { year: "2010", event: "Expanded to 100+ security officers" },
-  { year: "2013", event: "Achieved ISO 9001 certification" },
-  { year: "2016", event: "Launched mobile patrol division" },
-  { year: "2019", event: "Introduced live GPS tracking" },
-  { year: "2022", event: "Reached 500+ active clients" },
-  { year: "2024", event: "Expanded to 1,200+ officers nationwide" },
-];
+const timeline: { year: string; event: string }[] = [];
 
 const About = () => {
   return (
