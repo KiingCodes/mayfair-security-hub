@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import FloatingButtons from "./FloatingButtons";
+import CookieConsent from "./CookieConsent";
 import EmergencyBanner from "./EmergencyBanner";
 
 interface LayoutProps {
@@ -18,6 +19,7 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
       <Footer />
       <FloatingButtons />
+      <CookieConsent />
     </div>
   );
 };
