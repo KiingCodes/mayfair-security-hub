@@ -64,13 +64,25 @@ const AdminDashboard = () => {
     fetchAll();
   }, []);
 
+  // Realtime for emergency alerts
+  useEffect(() => {
+    const channel = supabase
+      .channel("admin-alerts-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "emergency_alerts" }, () => {
+        fetchAll();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, []);
+
   const fetchAll = async () => {
-    const [galleryRes, staffRes, clientsRes, incidentsRes, cancelRes] = await Promise.all([
+    const [galleryRes, staffRes, clientsRes, incidentsRes, cancelRes, alertsRes] = await Promise.all([
       supabase.from("gallery_items").select("*").order("sort_order"),
       supabase.from("staff_profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("incidents").select("*").order("created_at", { ascending: false }),
       supabase.from("contract_cancellations").select("*").order("created_at", { ascending: false }),
+      supabase.from("emergency_alerts").select("*").order("created_at", { ascending: false }),
     ]);
 
     if (galleryRes.data) setGalleryItems(galleryRes.data);
@@ -78,6 +90,7 @@ const AdminDashboard = () => {
     if (clientsRes.data) setClients(clientsRes.data);
     if (incidentsRes.data) setIncidents(incidentsRes.data);
     if (cancelRes.data) setCancellations(cancelRes.data);
+    if (alertsRes.data) setAlerts(alertsRes.data);
 
     setStats({
       gallery: galleryRes.data?.length || 0,
@@ -85,6 +98,7 @@ const AdminDashboard = () => {
       clients: clientsRes.data?.length || 0,
       incidents: incidentsRes.data?.filter(i => i.status === "open").length || 0,
       cancellations: cancelRes.data?.filter(c => c.status === "pending").length || 0,
+      alerts: alertsRes.data?.filter(a => a.status === "active").length || 0,
     });
   };
 

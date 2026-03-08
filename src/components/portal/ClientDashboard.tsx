@@ -131,6 +131,14 @@ const ClientDashboard = () => {
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
+        {/* Panic Button */}
+        <div className="mb-8">
+          <PanicButton />
+        </div>
+
+        {/* Alert History */}
+        <AlertHistory />
+
         {/* Stats */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <StatCard icon={Shield} label="Active Guards" value={checkins.filter(c => c.status === "on_duty").length} color="text-primary" />
