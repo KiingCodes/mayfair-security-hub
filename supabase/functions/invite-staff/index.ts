@@ -93,13 +93,33 @@ Deno.serve(async (req) => {
       position: position || "guard",
     });
 
+    // Send credentials email to the new staff member
+    const emailUrl = `${supabaseUrl}/functions/v1/send-client-email`;
+    await fetch(emailUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${anonKey}`,
+      },
+      body: JSON.stringify({
+        type: "staff_invite",
+        to: [email],
+        data: {
+          full_name,
+          email,
+          temp_password: tempPassword,
+          portal_url: req.headers.get("origin") || "https://mayfairsecurity.co.za/staff",
+        },
+      }),
+    });
+
     return new Response(
       JSON.stringify({
         success: true,
         user_id: newUser.user.id,
         email,
         temp_password: tempPassword,
-        message: `Staff account created. Share these credentials with ${full_name}.`,
+        message: `Staff account created. Credentials have been emailed to ${full_name}.`,
       }),
       {
         status: 200,
