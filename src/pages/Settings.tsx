@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Settings as SettingsIcon, Sun, Moon, Monitor, LogOut,
-  Trash2, User, Mail, Building, Phone, MapPin, Save, Shield
+  Trash2, User, Mail, Building, Phone, MapPin, Save, Shield, Lock
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,6 +31,10 @@ const Settings = () => {
     company_name: "",
     phone: "",
     address: "",
+  });
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: "",
+    confirmPassword: "",
   });
   const [profileLoaded, setProfileLoaded] = useState(false);
 
@@ -210,6 +214,62 @@ const Settings = () => {
               <Button onClick={handleSaveProfile} disabled={submitting} className="w-full">
                 <Save className="w-4 h-4 mr-2" />
                 {submitting ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Change Password */}
+          <motion.div
+            className="bg-muted rounded-2xl p-6"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+          >
+            <h2 className="font-heading font-bold text-lg mb-1 flex items-center gap-2">
+              <Lock className="w-5 h-5 text-primary" /> Change Password
+            </h2>
+            <p className="text-sm text-muted-foreground mb-4">Update your account password</p>
+            <div className="space-y-4">
+              <div>
+                <Label className="mb-1">New Password</Label>
+                <Input
+                  type="password"
+                  value={passwordForm.newPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                  placeholder="Enter new password"
+                  minLength={6}
+                />
+              </div>
+              <div>
+                <Label className="mb-1">Confirm New Password</Label>
+                <Input
+                  type="password"
+                  value={passwordForm.confirmPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                  placeholder="Confirm new password"
+                />
+              </div>
+              <Button
+                className="w-full"
+                disabled={submitting || !passwordForm.newPassword || passwordForm.newPassword.length < 6}
+                onClick={async () => {
+                  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+                    toast({ title: "Error", description: "Passwords don't match.", variant: "destructive" });
+                    return;
+                  }
+                  setSubmitting(true);
+                  const { error } = await supabase.auth.updateUser({ password: passwordForm.newPassword });
+                  if (error) {
+                    toast({ title: "Error", description: error.message, variant: "destructive" });
+                  } else {
+                    toast({ title: "Password Updated", description: "Your password has been changed successfully." });
+                    setPasswordForm({ newPassword: "", confirmPassword: "" });
+                  }
+                  setSubmitting(false);
+                }}
+              >
+                <Lock className="w-4 h-4 mr-2" />
+                {submitting ? "Updating..." : "Update Password"}
               </Button>
             </div>
           </motion.div>

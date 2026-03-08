@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Shield, LayoutDashboard } from "lucide-react";
+import { Menu, X, Phone, Shield, LayoutDashboard, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
-import ThemeToggle from "@/components/ThemeToggle";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -65,7 +64,13 @@ const Header = () => {
                 Client Portal
               </Button>
             </Link>
-            <ThemeToggle />
+            {user && (
+              <Link to="/settings">
+                <Button variant="ghost" size="icon" className="rounded-full" aria-label="Settings">
+                  <Settings className="w-5 h-5" />
+                </Button>
+              </Link>
+            )}
             <a href="#">
               <Button className="btn-emergency">
                 <Phone className="w-4 h-4 mr-2" />
@@ -103,10 +108,6 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t">
-                <div className="flex items-center justify-between pb-2">
-                  <span className="text-sm text-muted-foreground">Theme</span>
-                  <ThemeToggle />
-                </div>
                 {user && isAdmin && (
                   <Link to="/admin" onClick={() => setIsOpen(false)}>
                     <Button variant="outline" className="w-full border-destructive text-destructive">
@@ -121,6 +122,14 @@ const Header = () => {
                     Client Portal
                   </Button>
                 </Link>
+                {user && (
+                  <Link to="/settings" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Settings
+                    </Button>
+                  </Link>
+                )}
                 <a href="#">
                   <Button className="w-full btn-emergency">
                     <Phone className="w-4 h-4 mr-2" />
