@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import {
   UserCheck, Lock, Shield, LogOut, Save, Upload, Camera,
-  Phone, Mail, MapPin, Award, AlertTriangle
+  Phone, Mail, MapPin, Award, AlertTriangle, KeyRound, Eye, EyeOff
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,9 @@ const StaffPortal = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [passwordData, setPasswordData] = useState({ newPassword: "", confirmPassword: "" });
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
     full_name: "",
@@ -348,6 +351,69 @@ const StaffPortal = () => {
             <Button onClick={handleSaveProfile} className="w-full btn-primary-glow" disabled={submitting || !form.full_name}>
               <Save className="w-4 h-4 mr-2" />
               {submitting ? "Saving..." : profile ? "Update Profile" : "Create Profile"}
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* Change Password Section */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-card border rounded-2xl p-8 mt-6">
+          <h2 className="text-xl font-heading font-bold mb-6 flex items-center gap-2">
+            <KeyRound className="w-5 h-5 text-primary" /> Change Password
+          </h2>
+          <div className="space-y-4 max-w-md">
+            <div>
+              <Label>New Password</Label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={passwordData.newPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                  placeholder="Minimum 6 characters"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <Label>Confirm New Password</Label>
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={passwordData.confirmPassword}
+                onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                placeholder="Re-enter new password"
+              />
+            </div>
+            <Button
+              onClick={async () => {
+                if (passwordData.newPassword.length < 6) {
+                  toast({ title: "Error", description: "Password must be at least 6 characters.", variant: "destructive" });
+                  return;
+                }
+                if (passwordData.newPassword !== passwordData.confirmPassword) {
+                  toast({ title: "Error", description: "Passwords don't match.", variant: "destructive" });
+                  return;
+                }
+                setChangingPassword(true);
+                const { error } = await supabase.auth.updateUser({ password: passwordData.newPassword });
+                if (error) {
+                  toast({ title: "Error", description: error.message, variant: "destructive" });
+                } else {
+                  toast({ title: "Password Updated", description: "Your password has been changed successfully." });
+                  setPasswordData({ newPassword: "", confirmPassword: "" });
+                }
+                setChangingPassword(false);
+              }}
+              disabled={changingPassword || !passwordData.newPassword || !passwordData.confirmPassword}
+              variant="outline"
+              className="w-full"
+            >
+              <Lock className="w-4 h-4 mr-2" />
+              {changingPassword ? "Updating..." : "Update Password"}
             </Button>
           </div>
         </motion.div>
