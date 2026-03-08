@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
+import bgServices from "@/assets/bg-services.jpg";
 
 const services = [
   {
