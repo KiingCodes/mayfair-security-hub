@@ -728,7 +728,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {incidents.map((inc) => (
+                  {filteredIncidents.map((inc) => (
                     <TableRow key={inc.id} className="hover:bg-muted/30">
                       <TableCell className="font-semibold">{inc.incident_type}</TableCell>
                       <TableCell>{inc.location}</TableCell>
