@@ -155,6 +155,7 @@ const AdminFiles = () => {
   );
 
   return (
+    <DropZone onFileDrop={uploadFile} disabled={uploading || !selectedClient || selectedClient === "all"}>
     <div className="space-y-6">
       {/* Client Selector & Search */}
       <div className="flex flex-col sm:flex-row gap-3">
