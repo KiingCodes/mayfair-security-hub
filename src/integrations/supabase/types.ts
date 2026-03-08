@@ -410,6 +410,45 @@ export type Database = {
         }
         Relationships: []
       }
+      job_listings: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          location: string
+          requirements: string[]
+          salary: string
+          sort_order: number | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          location: string
+          requirements?: string[]
+          salary: string
+          sort_order?: number | null
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          location?: string
+          requirements?: string[]
+          salary?: string
+          sort_order?: number | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notification_preferences: {
         Row: {
           created_at: string
