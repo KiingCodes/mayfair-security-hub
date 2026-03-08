@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         from: "Mayfair Security <onboarding@resend.dev>",
-        to: [NOTIFICATION_EMAIL],
+        to: NOTIFICATION_EMAILS,
         subject,
         html,
       }),
