@@ -101,7 +101,7 @@ const Footer = () => {
         <div className="border-t border-white/10 mt-6 pt-6 flex items-center justify-center gap-2">
           <span className="text-white/40 text-xs">Designed & managed by</span>
           <a href="https://jeweliq.tech" target="_blank" rel="noopener noreferrer" className="inline-flex items-center hover:opacity-80 transition-opacity">
-            <img src={jeweliqLogo} alt="JewelIQ" className="h-8 w-auto" />
+            <img src={jeweliqLogo} alt="JewelIQ" className="h-12 w-auto" />
           </a>
         </div>
       </div>
