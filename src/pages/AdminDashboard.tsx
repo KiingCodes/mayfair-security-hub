@@ -177,6 +177,7 @@ const AdminDashboard = () => {
       incidents: incidentsRes.data?.filter(i => i.status === "open").length || 0,
       cancellations: cancelRes.data?.filter(c => c.status === "pending").length || 0,
       alerts: alertsRes.data?.filter(a => a.status === "active").length || 0,
+      applications: 0,
     });
   };
 
