@@ -91,9 +91,9 @@ const About = () => {
               <Globe className="w-12 h-12 text-primary mb-4" />
               <h2 className="text-2xl font-heading font-bold mb-4">Our Vision</h2>
               <p className="text-muted-foreground">
-                To be the leading security services provider, recognized for our commitment 
-                to excellence, innovation in technology, and the highest standards of 
-                professional conduct.
+                To grow into a trusted name in security by putting our clients first, 
+                embracing modern technology, and building long-lasting relationships 
+                founded on accountability and excellence.
               </p>
             </motion.div>
           </div>
