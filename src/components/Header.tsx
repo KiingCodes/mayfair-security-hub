@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Shield } from "lucide-react";
+import { Menu, X, Phone, Shield, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useRole } from "@/hooks/useRole";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -17,6 +19,8 @@ const navLinks = [
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
+  const { isAdmin } = useRole();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b">
@@ -46,6 +50,14 @@ const Header = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-4">
+            {user && isAdmin && (
+              <Link to="/admin">
+                <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
+                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  Admin Dashboard
+                </Button>
+              </Link>
+            )}
             <Link to="/portal">
               <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                 <Shield className="w-4 h-4 mr-2" />
@@ -89,6 +101,14 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t">
+                {user && isAdmin && (
+                  <Link to="/admin" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full border-destructive text-destructive">
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                )}
                 <Link to="/portal" onClick={() => setIsOpen(false)}>
                   <Button variant="outline" className="w-full border-primary text-primary">
                     <Shield className="w-4 h-4 mr-2" />
