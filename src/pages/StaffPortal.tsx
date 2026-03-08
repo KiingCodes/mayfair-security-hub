@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import {
   UserCheck, Lock, Shield, LogOut, Save, Upload, Camera,
-  Phone, Mail, MapPin, Award, AlertTriangle
+  Phone, Mail, MapPin, Award, AlertTriangle, KeyRound, Eye, EyeOff
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
