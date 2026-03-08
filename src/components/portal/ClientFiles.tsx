@@ -124,6 +124,7 @@ const ClientFiles = () => {
   };
 
   return (
+    <DropZone onFileDrop={uploadFile} disabled={uploading}>
     <motion.div className="bg-card border rounded-2xl p-6" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-heading font-bold text-lg flex items-center gap-2">
