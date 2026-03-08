@@ -158,6 +158,9 @@ const Settings = () => {
             </div>
           </motion.div>
 
+          {/* Email Notification Preferences */}
+          <EmailPreferences />
+
           {/* Account Info */}
           <motion.div
             className="bg-muted rounded-2xl p-6"
