@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      client_contracts: {
+        Row: {
+          client_id: string
+          created_at: string
+          description: string | null
+          file_name: string
+          file_url: string
+          id: string
+          title: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_url: string
+          id?: string
+          title: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_url?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       contact_submissions: {
         Row: {
           company: string | null
@@ -182,6 +212,51 @@ export type Database = {
         }
         Relationships: []
       }
+      guard_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          date_needed: string
+          duration: string
+          id: string
+          location: string
+          num_guards: number
+          reason: string | null
+          status: string
+          time_needed: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          date_needed: string
+          duration?: string
+          id?: string
+          location: string
+          num_guards?: number
+          reason?: string | null
+          status?: string
+          time_needed?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          date_needed?: string
+          duration?: string
+          id?: string
+          location?: string
+          num_guards?: number
+          reason?: string | null
+          status?: string
+          time_needed?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       incidents: {
         Row: {
           created_at: string
@@ -216,6 +291,45 @@ export type Database = {
           reported_by?: string
           reporter_name?: string
           severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      invoices: {
+        Row: {
+          amount: number
+          client_id: string
+          created_at: string
+          description: string | null
+          due_date: string | null
+          file_url: string | null
+          id: string
+          invoice_number: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          client_id: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          file_url?: string | null
+          id?: string
+          invoice_number: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          client_id?: string
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          file_url?: string | null
+          id?: string
+          invoice_number?: string
           status?: string
           updated_at?: string
         }
