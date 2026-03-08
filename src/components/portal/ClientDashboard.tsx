@@ -1,11 +1,46 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { FileText, Eye, AlertTriangle, Clock, MapPin, Shield } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  FileText, Eye, AlertTriangle, Clock, MapPin, Shield,
+  XCircle, Trash2, Send
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
+} from "@/components/ui/dialog";
 
 const ClientDashboard = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [cancelDialog, setCancelDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  // Realtime subscriptions
+  useEffect(() => {
+    const channel = supabase
+      .channel("client-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "guard_checkins" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["guard-checkins"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "incidents" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["incidents"] });
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "patrol_reports" }, () => {
+        queryClient.invalidateQueries({ queryKey: ["patrol-reports"] });
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [queryClient]);
 
   const { data: checkins = [] } = useQuery({
     queryKey: ["guard-checkins"],
@@ -46,6 +81,51 @@ const ClientDashboard = () => {
     },
   });
 
+  const { data: cancellations = [] } = useQuery({
+    queryKey: ["my-cancellations"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("contract_cancellations")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const handleCancelRequest = async () => {
+    if (!user || !cancelReason.trim()) return;
+    setSubmitting(true);
+    const { error } = await supabase.from("contract_cancellations").insert({
+      user_id: user.id,
+      reason: cancelReason.trim(),
+    });
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Request Submitted", description: "Your cancellation request has been sent to our team." });
+      setCancelDialog(false);
+      setCancelReason("");
+      queryClient.invalidateQueries({ queryKey: ["my-cancellations"] });
+    }
+    setSubmitting(false);
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!user) return;
+    setSubmitting(true);
+    const { error } = await supabase.from("profiles").delete().eq("user_id", user.id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+      setSubmitting(false);
+      return;
+    }
+    toast({ title: "Profile Deleted", description: "Your profile has been removed. Signing out..." });
+    setDeleteDialog(false);
+    setTimeout(() => signOut(), 1500);
+    setSubmitting(false);
+  };
+
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
@@ -57,12 +137,47 @@ const ClientDashboard = () => {
           <StatCard icon={FileText} label="Patrol Reports" value={reports.length} />
         </div>
 
+        {/* Actions */}
+        <div className="flex flex-wrap gap-3 mb-8">
+          <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground" onClick={() => setCancelDialog(true)}>
+            <XCircle className="w-4 h-4 mr-2" /> Request Contract Cancellation
+          </Button>
+          <Button variant="destructive" onClick={() => setDeleteDialog(true)}>
+            <Trash2 className="w-4 h-4 mr-2" /> Delete My Profile
+          </Button>
+        </div>
+
+        {/* Cancellation Requests */}
+        {cancellations.length > 0 && (
+          <div className="bg-muted rounded-2xl p-6 mb-8">
+            <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
+              <XCircle className="w-5 h-5 text-accent" /> My Cancellation Requests
+            </h3>
+            <div className="space-y-3">
+              {cancellations.map((c: any) => (
+                <div key={c.id} className="bg-background rounded-lg p-3 flex justify-between items-center">
+                  <div>
+                    <p className="text-sm">{c.reason}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(c.created_at).toLocaleDateString()}</p>
+                  </div>
+                  <Badge variant={c.status === "pending" ? "default" : c.status === "approved" ? "secondary" : "destructive"}>
+                    {c.status}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Recent Activity */}
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Recent Check-ins */}
           <div className="bg-muted rounded-2xl p-6">
             <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
               <MapPin className="w-5 h-5 text-primary" /> Recent Check-ins
+              <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
+                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" /> Live
+              </span>
             </h3>
             {checkins.length === 0 ? (
               <p className="text-muted-foreground text-sm">No check-ins yet.</p>
@@ -92,6 +207,9 @@ const ClientDashboard = () => {
           <div className="bg-muted rounded-2xl p-6">
             <h3 className="font-heading font-bold text-lg mb-4 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-accent" /> Recent Incidents
+              <span className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
+                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" /> Live
+              </span>
             </h3>
             {incidents.length === 0 ? (
               <p className="text-muted-foreground text-sm">No incidents reported.</p>
@@ -144,6 +262,52 @@ const ClientDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Cancel Contract Dialog */}
+      <Dialog open={cancelDialog} onOpenChange={setCancelDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Request Contract Cancellation</DialogTitle>
+            <DialogDescription>
+              Please provide a reason for your cancellation request. Our team will review it and get back to you.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Reason for cancellation</Label>
+              <Textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="Please explain why you'd like to cancel..."
+                rows={4}
+              />
+            </div>
+            <Button onClick={handleCancelRequest} className="w-full" disabled={submitting || !cancelReason.trim()}>
+              <Send className="w-4 h-4 mr-2" />
+              {submitting ? "Submitting..." : "Submit Request"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Profile Dialog */}
+      <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Your Profile</DialogTitle>
+            <DialogDescription>
+              This will permanently delete your profile data. You will be signed out. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 justify-end">
+            <Button variant="outline" onClick={() => setDeleteDialog(false)}>Cancel</Button>
+            <Button variant="destructive" onClick={handleDeleteProfile} disabled={submitting}>
+              <Trash2 className="w-4 h-4 mr-2" />
+              {submitting ? "Deleting..." : "Delete Profile"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

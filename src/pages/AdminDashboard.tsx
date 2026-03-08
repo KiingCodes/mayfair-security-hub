@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
-  LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save
+  LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,31 +48,37 @@ const AdminDashboard = () => {
   // Incidents state
   const [incidents, setIncidents] = useState<any[]>([]);
 
+  // Cancellations state
+  const [cancellations, setCancellations] = useState<any[]>([]);
+
   // Stats
-  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0 });
+  const [stats, setStats] = useState({ gallery: 0, staff: 0, clients: 0, incidents: 0, cancellations: 0 });
 
   useEffect(() => {
     fetchAll();
   }, []);
 
   const fetchAll = async () => {
-    const [galleryRes, staffRes, clientsRes, incidentsRes] = await Promise.all([
+    const [galleryRes, staffRes, clientsRes, incidentsRes, cancelRes] = await Promise.all([
       supabase.from("gallery_items").select("*").order("sort_order"),
       supabase.from("staff_profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("incidents").select("*").order("created_at", { ascending: false }),
+      supabase.from("contract_cancellations").select("*").order("created_at", { ascending: false }),
     ]);
 
     if (galleryRes.data) setGalleryItems(galleryRes.data);
     if (staffRes.data) setStaffProfiles(staffRes.data);
     if (clientsRes.data) setClients(clientsRes.data);
     if (incidentsRes.data) setIncidents(incidentsRes.data);
+    if (cancelRes.data) setCancellations(cancelRes.data);
 
     setStats({
       gallery: galleryRes.data?.length || 0,
       staff: staffRes.data?.length || 0,
       clients: clientsRes.data?.length || 0,
       incidents: incidentsRes.data?.filter(i => i.status === "open").length || 0,
+      cancellations: cancelRes.data?.filter(c => c.status === "pending").length || 0,
     });
   };
 
@@ -167,6 +173,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const updateCancellationStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from("contract_cancellations").update({ status }).eq("id", id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Updated", description: `Cancellation request ${status}.` });
+      fetchAll();
+    }
+  };
+
   return (
     <Layout>
       {/* Header */}
@@ -184,22 +200,29 @@ const AdminDashboard = () => {
 
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5 mb-8">
+          <TabsList className="grid w-full grid-cols-6 mb-8">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
             <TabsTrigger value="staff">Staff</TabsTrigger>
             <TabsTrigger value="clients">Clients</TabsTrigger>
             <TabsTrigger value="incidents">Incidents</TabsTrigger>
+            <TabsTrigger value="cancellations">
+              Cancellations
+              {stats.cancellations > 0 && (
+                <Badge variant="destructive" className="ml-1 text-xs px-1.5 py-0">{stats.cancellations}</Badge>
+              )}
+            </TabsTrigger>
           </TabsList>
 
           {/* Overview */}
           <TabsContent value="overview">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
               {[
                 { label: "Gallery Items", value: stats.gallery, icon: Image, color: "text-primary" },
                 { label: "Staff Members", value: stats.staff, icon: UserCheck, color: "text-primary" },
                 { label: "Clients", value: stats.clients, icon: Users, color: "text-primary" },
                 { label: "Open Incidents", value: stats.incidents, icon: AlertTriangle, color: "text-accent" },
+                { label: "Pending Cancellations", value: stats.cancellations, icon: XCircle, color: "text-accent" },
               ].map((stat) => (
                 <motion.div
                   key={stat.label}
@@ -422,6 +445,55 @@ const AdminDashboard = () => {
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                         No incidents reported.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
+
+          {/* Cancellations */}
+          <TabsContent value="cancellations">
+            <h2 className="text-xl font-heading font-bold mb-6">Contract Cancellation Requests</h2>
+            <div className="bg-card border rounded-xl overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Reason</TableHead>
+                    <TableHead>Submitted</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {cancellations.map((c: any) => (
+                    <TableRow key={c.id}>
+                      <TableCell className="font-medium max-w-xs truncate">{c.reason}</TableCell>
+                      <TableCell>{new Date(c.created_at).toLocaleDateString()}</TableCell>
+                      <TableCell>
+                        <Badge variant={c.status === "pending" ? "default" : c.status === "approved" ? "secondary" : "destructive"}>
+                          {c.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {c.status === "pending" && (
+                          <div className="flex gap-2 justify-end">
+                            <Button size="sm" variant="outline" onClick={() => updateCancellationStatus(c.id, "approved")}>
+                              <CheckCircle className="w-4 h-4 mr-1" /> Approve
+                            </Button>
+                            <Button size="sm" variant="destructive" onClick={() => updateCancellationStatus(c.id, "rejected")}>
+                              <X className="w-4 h-4 mr-1" /> Reject
+                            </Button>
+                          </div>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {cancellations.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                        No cancellation requests.
                       </TableCell>
                     </TableRow>
                   )}
