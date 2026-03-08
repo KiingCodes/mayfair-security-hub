@@ -402,6 +402,7 @@ const AdminDashboard = () => {
                 { value: "guard-requests", label: "Guards", icon: Users },
                 { value: "helpdesk", label: "Help Desk", icon: Bell },
                 { value: "jobs", label: "Jobs", icon: Briefcase },
+                { value: "applications", label: "Applicants", icon: FileText, badge: stats.applications },
               ].map((tab) => (
                 <TabsTrigger
                   key={tab.value}
