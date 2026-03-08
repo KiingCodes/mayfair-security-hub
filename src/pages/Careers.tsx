@@ -150,12 +150,12 @@ const Careers = () => {
             >
               <div className="bg-primary rounded-2xl p-6 text-primary-foreground">
                 <Users className="w-10 h-10 mb-4" />
-                <p className="text-3xl font-bold">1,200+</p>
+                <p className="text-3xl font-bold">—</p>
                 <p className="text-primary-foreground/80">Team Members</p>
               </div>
               <div className="bg-muted rounded-2xl p-6">
                 <Shield className="w-10 h-10 text-primary mb-4" />
-                <p className="text-3xl font-bold">15+</p>
+                <p className="text-3xl font-bold">—</p>
                 <p className="text-muted-foreground">Years Experience</p>
               </div>
               <div className="bg-muted rounded-2xl p-6">
@@ -165,7 +165,7 @@ const Careers = () => {
               </div>
               <div className="bg-charcoal rounded-2xl p-6 text-white">
                 <Briefcase className="w-10 h-10 mb-4" />
-                <p className="text-3xl font-bold">500+</p>
+                <p className="text-3xl font-bold">—</p>
                 <p className="text-white/80">Job Sites</p>
               </div>
             </motion.div>
