@@ -74,6 +74,10 @@ const AdminDashboard = () => {
   const [inviteForm, setInviteForm] = useState({ email: "", full_name: "", position: "guard" });
   const [inviteResult, setInviteResult] = useState<{ email: string; temp_password: string } | null>(null);
   const [inviting, setInviting] = useState(false);
+  const [resetDialog, setResetDialog] = useState(false);
+  const [resetTarget, setResetTarget] = useState<any>(null);
+  const [resetResult, setResetResult] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
   
   // Client state
   const [clients, setClients] = useState<any[]>([]);
