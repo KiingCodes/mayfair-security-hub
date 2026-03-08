@@ -11,6 +11,7 @@ import Careers from "./pages/Careers";
 import Contact from "./pages/Contact";
 import ClientPortal from "./pages/ClientPortal";
 import LiveTracking from "./pages/LiveTracking";
+import Gallery from "./pages/Gallery";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/portal" element={<ClientPortal />} />
             <Route path="/tracking" element={<LiveTracking />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="*" element={<NotFound />} />
