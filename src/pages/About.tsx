@@ -76,9 +76,9 @@ const About = () => {
               <Target className="w-12 h-12 text-primary mb-4" />
               <h2 className="text-2xl font-heading font-bold mb-4">Our Mission</h2>
               <p className="text-muted-foreground">
-                To provide comprehensive, reliable, and innovative security solutions that 
-                protect our clients' people, property, and assets while delivering exceptional 
-                service and peace of mind.
+                To earn the trust of every client through transparent, reliable, and 
+                affordable security solutions. We believe that exceptional service isn't 
+                built overnight — it's proven through consistent dedication and results.
               </p>
             </motion.div>
             <motion.div
