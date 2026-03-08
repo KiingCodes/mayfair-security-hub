@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
   LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle,
-  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity, Download
+  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity, Download, KeyRound
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,6 +74,10 @@ const AdminDashboard = () => {
   const [inviteForm, setInviteForm] = useState({ email: "", full_name: "", position: "guard" });
   const [inviteResult, setInviteResult] = useState<{ email: string; temp_password: string } | null>(null);
   const [inviting, setInviting] = useState(false);
+  const [resetDialog, setResetDialog] = useState(false);
+  const [resetTarget, setResetTarget] = useState<any>(null);
+  const [resetResult, setResetResult] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
   
   // Client state
   const [clients, setClients] = useState<any[]>([]);
@@ -247,6 +251,24 @@ const AdminDashboard = () => {
       toast({ title: "Deleted", description: "Staff profile removed." });
       fetchAll();
     }
+  };
+
+  const handleResetPassword = async () => {
+    if (!resetTarget) return;
+    setResetting(true);
+    setResetResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("reset-staff-password", {
+        body: { user_id: resetTarget.user_id },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setResetResult(data.new_password);
+      toast({ title: "Password Reset", description: `New password generated for ${resetTarget.full_name}.` });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
+    }
+    setResetting(false);
   };
   const handleInviteStaff = async () => {
     if (!inviteForm.email || !inviteForm.full_name) return;
@@ -672,9 +694,14 @@ const AdminDashboard = () => {
                         <Badge variant={s.status === "active" ? "default" : "secondary"}>{s.status}</Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" variant="destructive" className="shadow-sm" onClick={() => deleteStaffProfile(s.id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button size="sm" variant="outline" className="shadow-sm" onClick={() => { setResetTarget(s); setResetResult(null); setResetDialog(true); }}>
+                            <KeyRound className="w-4 h-4" />
+                          </Button>
+                          <Button size="sm" variant="destructive" className="shadow-sm" onClick={() => deleteStaffProfile(s.id)}>
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -979,6 +1006,48 @@ const AdminDashboard = () => {
                 <Plus className="w-4 h-4 mr-2" />
                 {inviting ? "Creating Account..." : "Create Staff Account"}
               </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={resetDialog} onOpenChange={setResetDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Reset Staff Password</DialogTitle>
+          </DialogHeader>
+          {resetResult ? (
+            <div className="space-y-4">
+              <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+                <p className="font-semibold text-sm mb-3">New password generated for {resetTarget?.full_name}:</p>
+                <div className="bg-background rounded-lg p-2.5 flex justify-between text-sm">
+                  <span className="text-muted-foreground">New Password:</span>
+                  <span className="font-mono font-semibold">{resetResult}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  Share this with the staff member. They should change it after logging in.
+                </p>
+              </div>
+              <Button className="w-full" onClick={() => { setResetDialog(false); setResetResult(null); }}>
+                Done
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                This will generate a new temporary password for <strong>{resetTarget?.full_name}</strong> ({resetTarget?.email || "no email"}).
+                Their current password will stop working immediately.
+              </p>
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1" onClick={() => setResetDialog(false)}>
+                  Cancel
+                </Button>
+                <Button className="flex-1 bg-primary hover:bg-primary/90" onClick={handleResetPassword} disabled={resetting}>
+                  <KeyRound className="w-4 h-4 mr-2" />
+                  {resetting ? "Resetting..." : "Reset Password"}
+                </Button>
+              </div>
             </div>
           )}
         </DialogContent>
