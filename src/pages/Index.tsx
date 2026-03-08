@@ -21,10 +21,10 @@ const services = [
 ];
 
 const stats = [
-  { value: "500+", label: "Active Clients" },
-  { value: "1,200+", label: "Security Officers" },
+  { value: "—", label: "Active Clients" },
+  { value: "—", label: "Security Officers" },
   { value: "24/7", label: "Emergency Response" },
-  { value: "15+", label: "Years Experience" },
+  { value: "—", label: "Years Experience" },
 ];
 
 const Index = () => {
