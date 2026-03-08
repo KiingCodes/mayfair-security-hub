@@ -90,9 +90,14 @@ const AdminDashboard = () => {
   const [dateTo, setDateTo] = useState<Date | undefined>(undefined);
 
   const filterByDate = (rows: any[], dateField = "created_at") => {
+    if (!dateFrom && !dateTo) return rows;
     return rows.filter(row => {
       const d = new Date(row[dateField]);
-      if (dateFrom && d < new Date(dateFrom.setHours(0, 0, 0, 0))) return false;
+      if (dateFrom) {
+        const start = new Date(dateFrom);
+        start.setHours(0, 0, 0, 0);
+        if (d < start) return false;
+      }
       if (dateTo) {
         const end = new Date(dateTo);
         end.setHours(23, 59, 59, 999);
