@@ -74,6 +74,48 @@ export type Database = {
         }
         Relationships: []
       }
+      emergency_alerts: {
+        Row: {
+          admin_notes: string | null
+          alert_type: string
+          created_at: string
+          description: string | null
+          id: string
+          location: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          alert_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          location?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          location?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       gallery_items: {
         Row: {
           category: string
