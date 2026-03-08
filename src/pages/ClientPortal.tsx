@@ -226,6 +226,14 @@ const ClientPortal = () => {
                     </div>
                   )}
 
+                  {isLogin && (
+                    <div className="text-right">
+                      <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                        Forgot Password?
+                      </Link>
+                    </div>
+                  )}
+
                   <Button type="submit" size="lg" className="w-full btn-primary-glow" disabled={submitting}>
                     <Lock className="mr-2 w-5 h-5" />
                     {submitting ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}

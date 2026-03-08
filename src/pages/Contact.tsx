@@ -49,6 +49,21 @@ const Contact = () => {
 
       if (error) throw error;
 
+      // Send email notification (fire and forget)
+      supabase.functions.invoke("send-notification", {
+        body: {
+          type: "contact",
+          data: {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            company: formData.company.trim(),
+            service: formData.service.trim(),
+            message: formData.message.trim(),
+          },
+        },
+      });
+
       toast({ title: "Message Sent!", description: "We'll get back to you within 24 hours." });
       setFormData({ name: "", email: "", phone: "", company: "", service: "", message: "" });
     } catch (err: any) {
