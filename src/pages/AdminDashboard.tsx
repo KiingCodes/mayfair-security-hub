@@ -681,7 +681,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredClients.map((c) => (
+                  {filteredCap((c) => (
                     <TableRow key={c.id} className="hover:bg-muted/30">
                       <TableCell className="font-semibold">{c.company_name || "—"}</TableCell>
                       <TableCell>{c.phone || "—"}</TableCell>
@@ -689,7 +689,7 @@ const AdminDashboard = () => {
                       <TableCell className="text-muted-foreground text-sm">{new Date(c.created_at).toLocaleDateString()}</TableCell>
                     </TableRow>
                   ))}
-           filteredC      {clients.length === 0 && (
+           filtered{filteredCength === 0 && (
                     <TableRow>
                       <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
                         <Users className="w-10 h-10 mx-auto mb-2 opacity-30" />
