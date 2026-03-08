@@ -13,13 +13,6 @@ const categories = [
   { id: "fencing", label: "Electric Fencing" },
 ];
 
-const fallbackItems = [
-  { id: "f1", image_url: guardsOnDutyFallback, category: "guards", title: "Guard on Night Duty", description: "Our officers maintain vigilance around the clock" },
-  { id: "f2", image_url: patrolVehiclesFallback, category: "vehicles", title: "Patrol Vehicle", description: "Fully equipped patrol units for mobile security" },
-  { id: "f3", image_url: trainingFallback, category: "training", title: "Self-Defence Training", description: "Rigorous hands-on combat training for all officers" },
-  { id: "f4", image_url: cctvAlarmsFallback, category: "cctv", title: "CCTV & Alarm Installation", description: "Professional surveillance and alarm systems" },
-  { id: "f5", image_url: electricFencingFallback, category: "fencing", title: "Electric Fencing", description: "High-voltage perimeter protection installations" },
-];
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("all");
