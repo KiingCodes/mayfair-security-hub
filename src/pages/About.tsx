@@ -41,13 +41,15 @@ const About = () => {
                 About Mayfair Security Services
               </h1>
               <p className="text-xl text-white/90 mb-6">
-                Think Ahead, Protect Smarter. We are a trusted 
-                security partner for businesses, events, and individuals.
+                Think Ahead, Protect Smarter. A fresh, dedicated security partner 
+                committed to earning your trust from day one.
               </p>
               <p className="text-white/80">
-                Founded on principles of integrity, professionalism, and excellence, 
-                Mayfair Security Services has grown from a small local operation to 
-                one of the most respected security companies in the industry.
+                Mayfair Security Services is a newly established security company built 
+                on a foundation of integrity, professionalism, and a genuine passion for 
+                protecting what matters most. While we're new to the industry, our team 
+                brings years of hands-on experience and a hunger to prove ourselves with 
+                every client we serve.
               </p>
             </motion.div>
             <motion.div
@@ -74,9 +76,9 @@ const About = () => {
               <Target className="w-12 h-12 text-primary mb-4" />
               <h2 className="text-2xl font-heading font-bold mb-4">Our Mission</h2>
               <p className="text-muted-foreground">
-                To provide comprehensive, reliable, and innovative security solutions that 
-                protect our clients' people, property, and assets while delivering exceptional 
-                service and peace of mind.
+                To earn the trust of every client through transparent, reliable, and 
+                affordable security solutions. We believe that exceptional service isn't 
+                built overnight — it's proven through consistent dedication and results.
               </p>
             </motion.div>
             <motion.div
@@ -89,9 +91,9 @@ const About = () => {
               <Globe className="w-12 h-12 text-primary mb-4" />
               <h2 className="text-2xl font-heading font-bold mb-4">Our Vision</h2>
               <p className="text-muted-foreground">
-                To be the leading security services provider, recognized for our commitment 
-                to excellence, innovation in technology, and the highest standards of 
-                professional conduct.
+                To grow into a trusted name in security by putting our clients first, 
+                embracing modern technology, and building long-lasting relationships 
+                founded on accountability and excellence.
               </p>
             </motion.div>
           </div>
@@ -219,8 +221,8 @@ const About = () => {
               Ready to Work With Us?
             </h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-              Join hundreds of satisfied clients who trust Mayfair Security Services 
-              for their protection needs.
+              Give us the opportunity to earn your trust. Let Mayfair Security Services 
+              be your dedicated security partner from the start.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/contact">
