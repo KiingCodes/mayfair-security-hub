@@ -787,7 +787,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {cancellations.map((c: any) => (
+                  {filteredCancellations.map((c: any) => (
                     <TableRow key={c.id} className="hover:bg-muted/30">
                       <TableCell className="font-medium max-w-xs truncate">{c.reason}</TableCell>
                       <TableCell className="text-muted-foreground text-sm">{new Date(c.created_at).toLocaleDateString()}</TableCell>
