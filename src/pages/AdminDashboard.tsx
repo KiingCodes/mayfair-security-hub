@@ -617,7 +617,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {staffProfiles.map((s) => (
+                  {filteredStaff.map((s) => (
                     <TableRow key={s.id} className="hover:bg-muted/30">
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-3">
