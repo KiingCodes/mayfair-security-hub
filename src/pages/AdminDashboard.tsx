@@ -931,6 +931,11 @@ const AdminDashboard = () => {
           <TabsContent value="jobs">
             <AdminJobListings />
           </TabsContent>
+
+          {/* Job Applications */}
+          <TabsContent value="applications">
+            <AdminJobApplications onPendingCount={(count) => setStats(prev => ({ ...prev, applications: count }))} />
+          </TabsContent>
         </Tabs>
       </div>
 
