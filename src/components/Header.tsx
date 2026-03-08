@@ -4,6 +4,7 @@ import { Menu, X, Phone, Shield, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
+import ThemeToggle from "@/components/ThemeToggle";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -64,6 +65,7 @@ const Header = () => {
                 Client Portal
               </Button>
             </Link>
+            <ThemeToggle />
             <a href="#">
               <Button className="btn-emergency">
                 <Phone className="w-4 h-4 mr-2" />
@@ -101,6 +103,10 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t">
+                <div className="flex items-center justify-between pb-2">
+                  <span className="text-sm text-muted-foreground">Theme</span>
+                  <ThemeToggle />
+                </div>
                 {user && isAdmin && (
                   <Link to="/admin" onClick={() => setIsOpen(false)}>
                     <Button variant="outline" className="w-full border-destructive text-destructive">
