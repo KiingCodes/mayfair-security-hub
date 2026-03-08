@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
   LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle,
-  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity, Download
+  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity, Download, KeyRound
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
