@@ -630,6 +630,9 @@ const AdminDashboard = () => {
               </h2>
               <div className="flex flex-wrap items-center gap-2">
                 <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button size="sm" onClick={() => { setInviteDialog(true); setInviteResult(null); setInviteForm({ email: "", full_name: "", position: "guard" }); }} className="bg-primary hover:bg-primary/90 shadow-md">
+                  <Plus className="w-4 h-4 mr-2" /> Invite Staff
+                </Button>
                 <Button variant="outline" size="sm" onClick={() => exportToCsv("staff", filteredStaff, ["full_name", "position", "psira_number", "phone", "email", "status", "created_at"])} disabled={filteredStaff.length === 0}>
                   <Download className="w-4 h-4 mr-2" /> Export CSV
                 </Button>
