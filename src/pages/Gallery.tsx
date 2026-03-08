@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, X } from "lucide-react";
 import Layout from "@/components/Layout";
+import { supabase } from "@/integrations/supabase/client";
 
-import guardsOnDuty from "@/assets/gallery/guards-on-duty.jpg";
-import patrolVehicles from "@/assets/gallery/patrol-vehicles.jpg";
-import training from "@/assets/gallery/training.jpg";
-import cctvAlarms from "@/assets/gallery/cctv-alarms.jpg";
-import electricFencing from "@/assets/gallery/electric-fencing.jpg";
+import guardsOnDutyFallback from "@/assets/gallery/guards-on-duty.jpg";
+import patrolVehiclesFallback from "@/assets/gallery/patrol-vehicles.jpg";
+import trainingFallback from "@/assets/gallery/training.jpg";
+import cctvAlarmsFallback from "@/assets/gallery/cctv-alarms.jpg";
+import electricFencingFallback from "@/assets/gallery/electric-fencing.jpg";
 
 const categories = [
   { id: "all", label: "All" },
@@ -18,21 +19,38 @@ const categories = [
   { id: "fencing", label: "Electric Fencing" },
 ];
 
-const galleryItems = [
-  { id: 1, src: guardsOnDuty, category: "guards", title: "Guard on Night Duty", description: "Our officers maintain vigilance around the clock" },
-  { id: 2, src: patrolVehicles, category: "vehicles", title: "Patrol Vehicle", description: "Fully equipped patrol units for mobile security" },
-  { id: 3, src: training, category: "training", title: "Self-Defence Training", description: "Rigorous hands-on combat training for all officers" },
-  { id: 4, src: cctvAlarms, category: "cctv", title: "CCTV & Alarm Installation", description: "Professional surveillance and alarm systems" },
-  { id: 5, src: electricFencing, category: "fencing", title: "Electric Fencing", description: "High-voltage perimeter protection installations" },
+const fallbackItems = [
+  { id: "f1", image_url: guardsOnDutyFallback, category: "guards", title: "Guard on Night Duty", description: "Our officers maintain vigilance around the clock" },
+  { id: "f2", image_url: patrolVehiclesFallback, category: "vehicles", title: "Patrol Vehicle", description: "Fully equipped patrol units for mobile security" },
+  { id: "f3", image_url: trainingFallback, category: "training", title: "Self-Defence Training", description: "Rigorous hands-on combat training for all officers" },
+  { id: "f4", image_url: cctvAlarmsFallback, category: "cctv", title: "CCTV & Alarm Installation", description: "Professional surveillance and alarm systems" },
+  { id: "f5", image_url: electricFencingFallback, category: "fencing", title: "Electric Fencing", description: "High-voltage perimeter protection installations" },
 ];
 
 const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<string | null>(null);
+  const [galleryItems, setGalleryItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      const { data } = await supabase.from("gallery_items").select("*").order("sort_order");
+      if (data && data.length > 0) {
+        setGalleryItems(data);
+      } else {
+        setGalleryItems(fallbackItems);
+      }
+      setLoading(false);
+    };
+    fetchGallery();
+  }, []);
 
   const filtered = activeCategory === "all"
     ? galleryItems
     : galleryItems.filter((item) => item.category === activeCategory);
+
+  const lightboxItem = galleryItems.find((i) => i.id === lightbox);
 
   return (
     <Layout>
@@ -58,7 +76,6 @@ const Gallery = () => {
       {/* Filter + Grid */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          {/* Category Filters */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
             {categories.map((cat) => (
               <button
@@ -75,44 +92,47 @@ const Gallery = () => {
             ))}
           </div>
 
-          {/* Gallery Grid */}
-          <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence mode="popLayout">
-              {filtered.map((item) => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                  className="group cursor-pointer rounded-2xl overflow-hidden bg-card border shadow-sm hover:shadow-lg transition-shadow"
-                  onClick={() => setLightbox(item.id)}
-                >
-                  <div className="relative aspect-square overflow-hidden">
-                    <img
-                      src={item.src}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5">
-                      <div>
-                        <h3 className="text-white font-heading font-bold text-lg">{item.title}</h3>
-                        <p className="text-white/80 text-sm">{item.description}</p>
+          {loading ? (
+            <div className="text-center py-12 text-muted-foreground">Loading gallery...</div>
+          ) : (
+            <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <AnimatePresence mode="popLayout">
+                {filtered.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3 }}
+                    className="group cursor-pointer rounded-2xl overflow-hidden bg-card border shadow-sm hover:shadow-lg transition-shadow"
+                    onClick={() => setLightbox(item.id)}
+                  >
+                    <div className="relative aspect-square overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-5">
+                        <div>
+                          <h3 className="text-white font-heading font-bold text-lg">{item.title}</h3>
+                          <p className="text-white/80 text-sm">{item.description}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          )}
         </div>
       </section>
 
       {/* Lightbox */}
       <AnimatePresence>
-        {lightbox !== null && (
+        {lightbox !== null && lightboxItem && (
           <motion.div
             className="fixed inset-0 z-50 bg-foreground/90 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -127,8 +147,8 @@ const Gallery = () => {
               <X className="w-8 h-8" />
             </button>
             <motion.img
-              src={galleryItems.find((i) => i.id === lightbox)?.src}
-              alt={galleryItems.find((i) => i.id === lightbox)?.title}
+              src={lightboxItem.image_url}
+              alt={lightboxItem.title}
               className="max-w-full max-h-[85vh] rounded-xl object-contain"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
