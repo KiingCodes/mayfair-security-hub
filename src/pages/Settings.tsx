@@ -32,6 +32,11 @@ const Settings = () => {
     phone: "",
     address: "",
   });
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const [profileLoaded, setProfileLoaded] = useState(false);
 
   const { data: profile } = useQuery({
