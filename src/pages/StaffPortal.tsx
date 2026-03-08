@@ -31,6 +31,7 @@ const StaffPortal = () => {
   const [passwordData, setPasswordData] = useState({ newPassword: "", confirmPassword: "" });
   const [changingPassword, setChangingPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const mustChangePassword = user?.user_metadata?.must_change_password === true;
 
   const [form, setForm] = useState({
     full_name: "",
