@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-
+import jeweliqLogo from "@/assets/jeweliq-logo.png";
 
 const Footer = () => {
   return (
