@@ -103,6 +103,10 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t">
+                <div className="flex items-center justify-between pb-2">
+                  <span className="text-sm text-muted-foreground">Theme</span>
+                  <ThemeToggle />
+                </div>
                 {user && isAdmin && (
                   <Link to="/admin" onClick={() => setIsOpen(false)}>
                     <Button variant="outline" className="w-full border-destructive text-destructive">
