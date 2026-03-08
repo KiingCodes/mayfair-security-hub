@@ -459,7 +459,7 @@ const AdminDashboard = () => {
             )}
 
             <div className="space-y-4">
-              {alerts.map((alert: any) => (
+              {filteredAlerts.map((alert: any) => (
                 <motion.div
                   key={alert.id}
                   className={`bg-card border-2 rounded-2xl p-6 transition-all ${
