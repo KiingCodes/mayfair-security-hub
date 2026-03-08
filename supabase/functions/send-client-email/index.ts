@@ -1,0 +1,272 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+};
+
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
+
+// Branded email wrapper
+const emailWrapper = (title: string, body: string, footerText = "You're receiving this because you're a Mayfair Security client.") => `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+  <div style="max-width:600px;margin:0 auto;padding:20px">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#1a2332,#2d5016);padding:24px 30px;border-radius:12px 12px 0 0;text-align:center">
+      <h1 style="margin:0;color:#ffffff;font-size:20px;font-weight:800;letter-spacing:-0.5px">🛡️ Mayfair Security</h1>
+    </div>
+    <!-- Title Bar -->
+    <div style="background:#f8fafc;padding:16px 30px;border-bottom:1px solid #e2e8f0">
+      <h2 style="margin:0;font-size:18px;color:#1a2332">${title}</h2>
+    </div>
+    <!-- Body -->
+    <div style="padding:24px 30px;background:#ffffff;border:1px solid #e2e8f0;border-top:none">
+      ${body}
+    </div>
+    <!-- Footer -->
+    <div style="padding:16px 30px;background:#f1f5f9;border-radius:0 0 12px 12px;text-align:center">
+      <p style="margin:0;font-size:12px;color:#64748b">${footerText}</p>
+      <p style="margin:4px 0 0;font-size:11px;color:#94a3b8">Mayfair Security &bull; Professional Protection Services</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+// Email templates by type
+const templates: Record<string, (data: any) => { subject: string; html: string }> = {
+  // 1. Welcome email on registration
+  welcome: (data) => ({
+    subject: "Welcome to Mayfair Security — Your Account is Ready",
+    html: emailWrapper("Welcome Aboard! 👋", `
+      <p style="color:#334155;font-size:15px;line-height:1.6">Hi there,</p>
+      <p style="color:#334155;font-size:15px;line-height:1.6">
+        Thank you for registering with Mayfair Security. Your client portal is now active. Here's what you can do:
+      </p>
+      <ul style="color:#334155;font-size:14px;line-height:2;padding-left:20px">
+        <li>📊 View patrol reports and guard check-ins</li>
+        <li>🚨 Trigger emergency panic alerts</li>
+        <li>📄 Access invoices and contracts</li>
+        <li>👮 Request additional security personnel</li>
+      </ul>
+      <div style="text-align:center;margin:24px 0">
+        <a href="${data.portal_url || '#'}" style="background:#2d5016;color:#ffffff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">
+          Access Your Portal →
+        </a>
+      </div>
+      <p style="color:#64748b;font-size:13px">If you have any questions, don't hesitate to reach out to our team.</p>
+    `),
+  }),
+
+  // 2. Incident reported notification
+  incident_reported: (data) => ({
+    subject: `⚠️ Incident Report: ${data.incident_type} at ${data.location}`,
+    html: emailWrapper("Incident Reported ⚠️", `
+      <p style="color:#334155;font-size:15px;line-height:1.6">An incident has been reported in your area:</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;background:#fef2f2;font-weight:600;width:140px;color:#991b1b">Type</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0;background:#fef2f2;font-weight:700;color:#dc2626">${data.incident_type}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Location</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.location}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Severity</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.severity}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Description</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.description}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Reported By</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.reporter_name}</td></tr>
+      </table>
+      <p style="color:#64748b;font-size:13px;margin-top:16px">Our team is monitoring the situation. Log in to your portal for live updates.</p>
+    `),
+  }),
+
+  // 3. Emergency alert confirmation (sent to the client who triggered it)
+  emergency_alert_confirmed: (data) => ({
+    subject: `🚨 Emergency Alert Received — Help is on the way`,
+    html: emailWrapper("Emergency Alert Confirmed 🚨", `
+      <div style="background:#fef2f2;border-left:4px solid #dc2626;padding:16px;border-radius:0 8px 8px 0;margin-bottom:16px">
+        <p style="margin:0;font-weight:700;color:#dc2626;font-size:16px">Your emergency alert has been received!</p>
+        <p style="margin:4px 0 0;color:#991b1b;font-size:14px">Our response team has been notified immediately.</p>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Alert Type</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:700;color:#dc2626">${data.alert_type}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Location</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.location || "Not specified"}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Time</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.time}</td></tr>
+      </table>
+      <p style="color:#334155;font-size:14px;line-height:1.6"><strong>What happens next:</strong></p>
+      <ol style="color:#334155;font-size:14px;line-height:2;padding-left:20px">
+        <li>Our admin team reviews your alert immediately</li>
+        <li>A response team is dispatched to your location</li>
+        <li>You'll receive an update when the alert is resolved</li>
+      </ol>
+      <p style="color:#64748b;font-size:13px">If you need immediate phone assistance, call <strong>060 433 4341</strong></p>
+    `),
+  }),
+
+  // 4. Emergency alert resolved
+  emergency_alert_resolved: (data) => ({
+    subject: `✅ Emergency Alert Resolved — ${data.alert_type}`,
+    html: emailWrapper("Alert Resolved ✅", `
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:16px;border-radius:0 8px 8px 0;margin-bottom:16px">
+        <p style="margin:0;font-weight:700;color:#16a34a;font-size:16px">Your emergency alert has been resolved</p>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Alert Type</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.alert_type}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Resolution</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.admin_notes || "Resolved by admin"}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Resolved At</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.resolved_at}</td></tr>
+      </table>
+      <p style="color:#64748b;font-size:13px">Thank you for using our emergency alert system. Stay safe!</p>
+    `),
+  }),
+
+  // 5. Cancellation request status update
+  cancellation_update: (data) => ({
+    subject: `Contract Cancellation ${data.status === "approved" ? "Approved ✅" : data.status === "rejected" ? "Declined ❌" : "Update 📋"}`,
+    html: emailWrapper(`Cancellation ${data.status === "approved" ? "Approved" : data.status === "rejected" ? "Declined" : "Update"}`, `
+      <p style="color:#334155;font-size:15px;line-height:1.6">
+        Your contract cancellation request has been <strong>${data.status}</strong>.
+      </p>
+      <div style="background:${data.status === "approved" ? "#f0fdf4" : data.status === "rejected" ? "#fef2f2" : "#f8fafc"};padding:16px;border-radius:8px;margin:16px 0">
+        <p style="margin:0;font-size:14px;color:#334155"><strong>Status:</strong> ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}</p>
+        <p style="margin:8px 0 0;font-size:14px;color:#334155"><strong>Your reason:</strong> ${data.reason}</p>
+      </div>
+      ${data.status === "approved"
+        ? '<p style="color:#334155;font-size:14px">Our team will be in touch regarding the next steps for your contract termination.</p>'
+        : data.status === "rejected"
+        ? '<p style="color:#334155;font-size:14px">If you have questions about this decision, please contact our support team.</p>'
+        : ""}
+    `),
+  }),
+
+  // 6. New patrol report filed
+  patrol_report: (data) => ({
+    subject: `📋 Patrol Report: ${data.location}`,
+    html: emailWrapper("New Patrol Report 📋", `
+      <p style="color:#334155;font-size:15px;line-height:1.6">A new patrol report has been filed for your area:</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Guard</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.guard_name}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Location</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.location}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Type</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.report_type}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Summary</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.summary}</td></tr>
+      </table>
+      <p style="color:#64748b;font-size:13px">View full details in your client portal.</p>
+    `),
+  }),
+
+  // 7. Staff invitation credentials
+  staff_invite: (data) => ({
+    subject: "🛡️ Welcome to Mayfair Security — Your Staff Account",
+    html: emailWrapper("Your Staff Account is Ready 👮", `
+      <p style="color:#334155;font-size:15px;line-height:1.6">Hi ${data.full_name},</p>
+      <p style="color:#334155;font-size:15px;line-height:1.6">
+        You've been invited to join Mayfair Security as a staff member. Here are your login credentials:
+      </p>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:20px;border-radius:8px;margin:16px 0">
+        <table style="width:100%">
+          <tr><td style="padding:6px 0;font-weight:600;color:#334155">Email:</td>
+              <td style="padding:6px 0;font-family:monospace;font-weight:700;color:#1a2332">${data.email}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:600;color:#334155">Temp Password:</td>
+              <td style="padding:6px 0;font-family:monospace;font-weight:700;color:#1a2332">${data.temp_password}</td></tr>
+        </table>
+      </div>
+      <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0">
+        <p style="margin:0;font-size:13px;color:#92400e"><strong>Important:</strong> You'll be required to change your password on first login.</p>
+      </div>
+      <div style="text-align:center;margin:24px 0">
+        <a href="${data.portal_url || '#'}" style="background:#2d5016;color:#ffffff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">
+          Login to Staff Portal →
+        </a>
+      </div>
+    `, "You're receiving this because an admin created a staff account for you."),
+  }),
+
+  // 8. Incident status update
+  incident_resolved: (data) => ({
+    subject: `✅ Incident Resolved: ${data.incident_type} at ${data.location}`,
+    html: emailWrapper("Incident Resolved ✅", `
+      <div style="background:#f0fdf4;border-left:4px solid #16a34a;padding:16px;border-radius:0 8px 8px 0;margin-bottom:16px">
+        <p style="margin:0;font-weight:700;color:#16a34a;font-size:16px">An incident in your area has been resolved</p>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0">
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;width:140px">Type</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.incident_type}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Location</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0">${data.location}</td></tr>
+        <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600">Status</td>
+            <td style="padding:10px 12px;border:1px solid #e2e8f0;color:#16a34a;font-weight:700">${data.status}</td></tr>
+      </table>
+    `),
+  }),
+};
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { type, to, data } = await req.json();
+
+    if (!type || !templates[type]) {
+      return new Response(JSON.stringify({ error: `Invalid email type: ${type}` }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!to || (Array.isArray(to) && to.length === 0)) {
+      return new Response(JSON.stringify({ error: "Recipient(s) required" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { subject, html } = templates[type](data || {});
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Mayfair Security <onboarding@resend.dev>",
+        to: Array.isArray(to) ? to : [to],
+        subject,
+        html,
+      }),
+    });
+
+    const resData = await res.json();
+
+    if (!res.ok) {
+      console.error("Resend error:", resData);
+      return new Response(JSON.stringify({ error: "Failed to send email", details: resData }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true, id: resData.id }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+});
