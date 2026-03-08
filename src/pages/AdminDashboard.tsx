@@ -593,13 +593,16 @@ const AdminDashboard = () => {
 
           {/* Staff Management */}
           <TabsContent value="staff">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <h2 className="text-xl font-heading font-bold flex items-center gap-2">
                 <UserCheck className="w-5 h-5 text-primary" /> Staff Management
               </h2>
-              <Button variant="outline" size="sm" onClick={() => exportToCsv("staff", staffProfiles, ["full_name", "position", "psira_number", "phone", "email", "status", "created_at"])} disabled={staffProfiles.length === 0}>
-                <Download className="w-4 h-4 mr-2" /> Export CSV
-              </Button>
+              <div className="flex flex-wrap items-center gap-2">
+                <DateRangeFilter from={dateFrom} to={dateTo} onFromChange={setDateFrom} onToChange={setDateTo} />
+                <Button variant="outline" size="sm" onClick={() => exportToCsv("staff", filteredStaff, ["full_name", "position", "psira_number", "phone", "email", "status", "created_at"])} disabled={filteredStaff.length === 0}>
+                  <Download className="w-4 h-4 mr-2" /> Export CSV
+                </Button>
+              </div>
             </div>
             <div className="bg-card border rounded-2xl overflow-hidden shadow-sm">
               <Table>
