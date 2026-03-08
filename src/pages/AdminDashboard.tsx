@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Shield, Image, Users, UserCheck, Trash2, Edit, Plus, Upload,
   LogOut, LayoutDashboard, AlertTriangle, FileText, X, Save, XCircle, CheckCircle,
-  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity, Download, KeyRound
+  Bell, ShieldAlert, CheckCircle2, ArrowLeft, Activity, Download, KeyRound, Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ import AdminInvoices from "@/components/admin/AdminInvoices";
 import AdminContracts from "@/components/admin/AdminContracts";
 import AdminGuardRequests from "@/components/admin/AdminGuardRequests";
 import AdminHelpDesk from "@/components/admin/AdminHelpDesk";
+import AdminJobListings from "@/components/admin/AdminJobListings";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
@@ -385,7 +386,7 @@ const AdminDashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="bg-card border rounded-2xl p-1.5 mb-8 shadow-sm">
-            <TabsList className="grid w-full grid-cols-4 md:grid-cols-12 gap-1 bg-transparent h-auto">
+            <TabsList className="grid w-full grid-cols-4 md:grid-cols-13 gap-1 bg-transparent h-auto">
               {[
                 { value: "overview", label: "Overview", icon: LayoutDashboard },
                 { value: "alerts", label: "Alerts", icon: ShieldAlert, badge: stats.alerts },
@@ -399,6 +400,7 @@ const AdminDashboard = () => {
                 { value: "contracts", label: "Contracts", icon: Download },
                 { value: "guard-requests", label: "Guards", icon: Users },
                 { value: "helpdesk", label: "Help Desk", icon: Bell },
+                { value: "jobs", label: "Jobs", icon: Briefcase },
               ].map((tab) => (
                 <TabsTrigger
                   key={tab.value}
@@ -920,6 +922,11 @@ const AdminDashboard = () => {
           {/* Help Desk */}
           <TabsContent value="helpdesk">
             <AdminHelpDesk />
+          </TabsContent>
+
+          {/* Job Listings */}
+          <TabsContent value="jobs">
+            <AdminJobListings />
           </TabsContent>
         </Tabs>
       </div>
