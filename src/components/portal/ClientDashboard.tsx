@@ -5,15 +5,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import {
   FileText, Eye, AlertTriangle, Clock, MapPin, Shield,
-  XCircle, Trash2, Send
+  XCircle, Trash2, Send, Download, Users
 } from "lucide-react";
 import PanicButton from "./PanicButton";
 import AlertHistory from "./AlertHistory";
 import ClientFiles from "./ClientFiles";
+import ClientInvoices from "./ClientInvoices";
+import ClientContracts from "./ClientContracts";
+import GuardRequestForm from "./GuardRequestForm";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription
 } from "@/components/ui/dialog";
