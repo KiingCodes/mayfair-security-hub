@@ -167,7 +167,7 @@ const About = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Certifications */}
       <section className="py-20 bg-muted">
