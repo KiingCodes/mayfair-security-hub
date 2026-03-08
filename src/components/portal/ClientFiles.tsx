@@ -64,9 +64,8 @@ const ClientFiles = () => {
 
   useEffect(() => { fetchFiles(); }, [user]);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
+  const uploadFile = async (file: File) => {
+    if (!user) return;
     if (file.size > 20 * 1024 * 1024) {
       toast({ title: "File too large", description: "Maximum file size is 20MB.", variant: "destructive" });
       return;
@@ -92,7 +91,12 @@ const ClientFiles = () => {
       fetchFiles();
     }
     setUploading(false);
-    e.target.value = "";
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) await uploadFile(file);
+    if (e.target) e.target.value = "";
   };
 
   const handleDownload = async (file: SharedFile) => {
