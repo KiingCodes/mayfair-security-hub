@@ -209,6 +209,27 @@ const templates: Record<string, (data: any) => { subject: string; html: string }
       </table>
     `),
   }),
+
+  // 9. File shared with client
+  file_shared: (data) => ({
+    subject: `📁 New File Shared: ${data.file_name}`,
+    html: emailWrapper("New File Shared With You 📁", `
+      <p style="color:#334155;font-size:15px;line-height:1.6">A new file has been shared with you by the Mayfair Security team:</p>
+      <div style="background:#f0f9ff;border:1px solid #bae6fd;padding:20px;border-radius:8px;margin:16px 0">
+        <table style="width:100%">
+          <tr><td style="padding:6px 0;font-weight:600;color:#334155">File Name:</td>
+              <td style="padding:6px 0;font-weight:700;color:#1a2332">${data.file_name}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:600;color:#334155">Description:</td>
+              <td style="padding:6px 0;color:#334155">${data.description}</td></tr>
+        </table>
+      </div>
+      <div style="text-align:center;margin:24px 0">
+        <a href="#" style="background:#2d5016;color:#ffffff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">
+          View in Client Portal →
+        </a>
+      </div>
+    `),
+  }),
 };
 
 Deno.serve(async (req) => {
