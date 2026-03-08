@@ -238,15 +238,15 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-3 gap-4 mt-4">
                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-white">12</p>
+                    <p className="text-2xl font-bold text-white">—</p>
                     <p className="text-xs text-white/70">Active Guards</p>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-white">48</p>
+                    <p className="text-2xl font-bold text-white">—</p>
                     <p className="text-xs text-white/70">Check-ins Today</p>
                   </div>
                   <div className="bg-white/10 rounded-lg p-3 text-center">
-                    <p className="text-2xl font-bold text-primary">0</p>
+                    <p className="text-2xl font-bold text-primary">—</p>
                     <p className="text-xs text-white/70">Incidents</p>
                   </div>
                 </div>
