@@ -24,6 +24,7 @@ import AdminFiles from "@/components/admin/AdminFiles";
 import AdminInvoices from "@/components/admin/AdminInvoices";
 import AdminContracts from "@/components/admin/AdminContracts";
 import AdminGuardRequests from "@/components/admin/AdminGuardRequests";
+import AdminHelpDesk from "@/components/admin/AdminHelpDesk";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
