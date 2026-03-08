@@ -122,6 +122,14 @@ const Header = () => {
                     Client Portal
                   </Button>
                 </Link>
+                {user && (
+                  <Link to="/settings" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Settings
+                    </Button>
+                  </Link>
+                )}
                 <a href="#">
                   <Button className="w-full btn-emergency">
                     <Phone className="w-4 h-4 mr-2" />
