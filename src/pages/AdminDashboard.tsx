@@ -681,7 +681,7 @@ const AdminDashboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {clients.map((c) => (
+                  {filteredClients.map((c) => (
                     <TableRow key={c.id} className="hover:bg-muted/30">
                       <TableCell className="font-semibold">{c.company_name || "—"}</TableCell>
                       <TableCell>{c.phone || "—"}</TableCell>
