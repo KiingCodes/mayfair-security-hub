@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import DateRangeFilter from "@/components/admin/DateRangeFilter";
+import AdminFiles from "@/components/admin/AdminFiles";
 
 const GALLERY_CATEGORIES = [
   { value: "guards", label: "Guards on Duty" },
