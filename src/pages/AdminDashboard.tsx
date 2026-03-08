@@ -916,6 +916,11 @@ const AdminDashboard = () => {
           <TabsContent value="guard-requests">
             <AdminGuardRequests clients={clients} />
           </TabsContent>
+
+          {/* Help Desk */}
+          <TabsContent value="helpdesk">
+            <AdminHelpDesk />
+          </TabsContent>
         </Tabs>
       </div>
 
