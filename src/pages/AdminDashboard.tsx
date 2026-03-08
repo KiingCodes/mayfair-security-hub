@@ -644,7 +644,7 @@ const AdminDashboard = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {staffProfiles.length === 0 && (
+                  {filteredStaff.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                         <UserCheck className="w-10 h-10 mx-auto mb-2 opacity-30" />
