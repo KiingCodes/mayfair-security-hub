@@ -142,11 +142,11 @@ const LiveTracking = () => {
               <div className="space-y-4">
                 <div className="bg-muted rounded-xl p-4">
                   <p className="text-sm text-muted-foreground mb-1">Active Guards</p>
-                  <p className="text-3xl font-heading font-bold text-primary">—</p>
+                  <p className="text-3xl font-heading font-bold text-primary">—�</p>
                 </div>
                 <div className="bg-muted rounded-xl p-4">
                   <p className="text-sm text-muted-foreground mb-1">Check-ins Today</p>
-                  <p className="text-3xl font-heading font-bold">48</p>
+                  <p className="text-3xl font-heading font-bold"—8</p>
                 </div>
                 <div className="bg-muted rounded-xl p-4">
                   <p className="text-sm text-muted-foreground mb-1">Incidents</p>
