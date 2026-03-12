@@ -44,7 +44,6 @@ const PanicButton = () => {
 
       if (error) throw error;
 
-      // Send email notification to admin
       const alertLabel = ALERT_TYPES.find(a => a.value === selectedType)?.label || selectedType;
       const alertData = {
         alert_type: alertLabel,
@@ -54,20 +53,27 @@ const PanicButton = () => {
         time: new Date().toLocaleString(),
       };
 
-      await supabase.functions.invoke("send-notification", {
+      // Send email notification (fire and forget — don't block the alert)
+      supabase.functions.invoke("send-notification", {
         body: { type: "emergency_alert", data: alertData },
-      });
+      }).catch((e) => console.error("Email notification failed:", e));
 
-      // Open WhatsApp with emergency message
+      // Build WhatsApp URL
       const whatsappMsg = encodeURIComponent(
         `🚨 EMERGENCY ALERT - Mayfair Security\n\nType: ${alertLabel}\nLocation: ${alertData.location}\nDetails: ${alertData.description}\nClient: ${alertData.user_email}\nTime: ${alertData.time}`
       );
-      window.open(`https://wa.me/27604334341?text=${whatsappMsg}`, "_blank");
+      const whatsappUrl = `https://wa.me/27604334341?text=${whatsappMsg}`;
 
       toast({
         title: "🚨 Emergency Alert Sent!",
         description: "Our team has been notified and will respond immediately.",
       });
+
+      // Use location.href for WhatsApp to avoid popup blockers
+      // Small delay so the user sees the success toast first
+      setTimeout(() => {
+        window.location.href = whatsappUrl;
+      }, 1500);
 
       setOpen(false);
       setSelectedType("");
