@@ -4,7 +4,7 @@ import { Menu, X, Phone, Shield, LayoutDashboard, Settings, HelpCircle } from "l
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/mayfair-navbar-logo.png";
 
 const navLinks = [
   { name: "Home", path: "/" },
