@@ -8,11 +8,41 @@ const corsHeaders = {
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const NOTIFICATION_EMAILS = ["koketsonare65@outlook.com", "jeweliq.tech@outlook.com"];
+const RESEND_SANDBOX_TO = Deno.env.get("RESEND_SANDBOX_TO")?.trim() || "kiingncube@gmail.com";
 
 interface NotificationPayload {
   type: "contact" | "job_application" | "emergency_alert";
   data: Record<string, string>;
 }
+
+const sendEmail = async (to: string[], subject: string, html: string) => {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+    },
+    body: JSON.stringify({
+      from: "Mayfair Security <onboarding@resend.dev>",
+      to,
+      subject,
+      html,
+    }),
+  });
+
+  const data = await res.json();
+
+  return {
+    ok: res.ok,
+    data,
+    recipients: to,
+  };
+};
+
+const isSandboxRestriction = (details: Record<string, unknown>) => {
+  const message = typeof details.message === "string" ? details.message.toLowerCase() : "";
+  return details.name === "validation_error" && message.includes("testing emails");
+};
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -77,31 +107,22 @@ Deno.serve(async (req) => {
       });
     }
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "Mayfair Security <onboarding@resend.dev>",
-        to: NOTIFICATION_EMAILS,
-        subject,
-        html,
-      }),
-    });
+    let result = await sendEmail(NOTIFICATION_EMAILS, subject, html);
 
-    const resData = await res.json();
+    if (!result.ok && isSandboxRestriction(result.data)) {
+      console.warn("Resend sandbox restriction hit; retrying with sandbox recipient", RESEND_SANDBOX_TO);
+      result = await sendEmail([RESEND_SANDBOX_TO], subject, html);
+    }
 
-    if (!res.ok) {
-      console.error("Resend error:", resData);
+    if (!result.ok) {
+      console.error("Resend error:", result.data);
       return new Response(JSON.stringify({ error: "Failed to send email", details: resData }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    return new Response(JSON.stringify({ success: true, id: resData.id }), {
+    return new Response(JSON.stringify({ success: true, id: result.data.id, recipients: result.recipients }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
