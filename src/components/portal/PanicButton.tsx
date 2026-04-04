@@ -32,7 +32,11 @@ const PanicButton = () => {
     if (!user || !selectedType) return;
 
     const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    const whatsappWindow = !isMobile ? window.open("", "_blank", "noopener,noreferrer") : null;
+    const whatsappWindow = !isMobile ? window.open("about:blank", "_blank") : null;
+
+    if (whatsappWindow) {
+      whatsappWindow.opener = null;
+    }
 
     setSubmitting(true);
 
