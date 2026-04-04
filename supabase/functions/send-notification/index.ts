@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
 
     if (!result.ok) {
       console.error("Resend error:", result.data);
-      return new Response(JSON.stringify({ error: "Failed to send email", details: resData }), {
+      return new Response(JSON.stringify({ error: "Failed to send email", details: result.data, recipients: result.recipients }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

@@ -30,6 +30,10 @@ const PanicButton = () => {
 
   const handleSubmit = async () => {
     if (!user || !selectedType) return;
+
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const whatsappWindow = !isMobile ? window.open("", "_blank", "noopener,noreferrer") : null;
+
     setSubmitting(true);
 
     try {
@@ -69,11 +73,12 @@ const PanicButton = () => {
         description: "Our team has been notified and will respond immediately.",
       });
 
-      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-      const openedWindow = window.open(whatsappUrl, isMobile ? "_self" : "_blank", isMobile ? undefined : "noopener,noreferrer");
-
-      if (!openedWindow && !isMobile) {
+      if (whatsappWindow) {
+        whatsappWindow.location.replace(whatsappUrl);
+      } else if (isMobile) {
         window.location.href = whatsappUrl;
+      } else {
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer") || (window.location.href = whatsappUrl);
       }
 
       setOpen(false);
@@ -81,6 +86,7 @@ const PanicButton = () => {
       setDescription("");
       setLocation("");
     } catch (err: any) {
+      whatsappWindow?.close();
       toast({ title: "Error", description: err.message, variant: "destructive" });
     }
 
