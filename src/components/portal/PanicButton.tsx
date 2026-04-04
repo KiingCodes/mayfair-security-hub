@@ -30,6 +30,14 @@ const PanicButton = () => {
 
   const handleSubmit = async () => {
     if (!user || !selectedType) return;
+
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    const whatsappWindow = !isMobile ? window.open("about:blank", "_blank") : null;
+
+    if (whatsappWindow) {
+      whatsappWindow.opener = null;
+    }
+
     setSubmitting(true);
 
     try {
@@ -62,24 +70,27 @@ const PanicButton = () => {
       const whatsappMsg = encodeURIComponent(
         `🚨 EMERGENCY ALERT - Mayfair Security\n\nType: ${alertLabel}\nLocation: ${alertData.location}\nDetails: ${alertData.description}\nClient: ${alertData.user_email}\nTime: ${alertData.time}`
       );
-      const whatsappUrl = `https://wa.me/27604334341?text=${whatsappMsg}`;
+      const whatsappUrl = `https://wa.me/27626685754?text=${whatsappMsg}`;
 
       toast({
         title: "🚨 Emergency Alert Sent!",
         description: "Our team has been notified and will respond immediately.",
       });
 
-      // Use location.href for WhatsApp to avoid popup blockers
-      // Small delay so the user sees the success toast first
-      setTimeout(() => {
+      if (whatsappWindow) {
+        whatsappWindow.location.replace(whatsappUrl);
+      } else if (isMobile) {
         window.location.href = whatsappUrl;
-      }, 1500);
+      } else {
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer") || (window.location.href = whatsappUrl);
+      }
 
       setOpen(false);
       setSelectedType("");
       setDescription("");
       setLocation("");
     } catch (err: any) {
+      whatsappWindow?.close();
       toast({ title: "Error", description: err.message, variant: "destructive" });
     }
 
