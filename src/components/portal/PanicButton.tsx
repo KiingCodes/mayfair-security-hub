@@ -62,18 +62,19 @@ const PanicButton = () => {
       const whatsappMsg = encodeURIComponent(
         `🚨 EMERGENCY ALERT - Mayfair Security\n\nType: ${alertLabel}\nLocation: ${alertData.location}\nDetails: ${alertData.description}\nClient: ${alertData.user_email}\nTime: ${alertData.time}`
       );
-      const whatsappUrl = `https://wa.me/27604334341?text=${whatsappMsg}`;
+      const whatsappUrl = `https://wa.me/27626685754?text=${whatsappMsg}`;
 
       toast({
         title: "🚨 Emergency Alert Sent!",
         description: "Our team has been notified and will respond immediately.",
       });
 
-      // Use location.href for WhatsApp to avoid popup blockers
-      // Small delay so the user sees the success toast first
-      setTimeout(() => {
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      const openedWindow = window.open(whatsappUrl, isMobile ? "_self" : "_blank", isMobile ? undefined : "noopener,noreferrer");
+
+      if (!openedWindow && !isMobile) {
         window.location.href = whatsappUrl;
-      }, 1500);
+      }
 
       setOpen(false);
       setSelectedType("");
